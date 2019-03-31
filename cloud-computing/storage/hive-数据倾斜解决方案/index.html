@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="google4762031ea0163586.html">
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="baidu_verify_PLjBgmPD2S.html">
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.0.1',
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="数据倾斜是hive工程中常见的情况。">
+<meta name="keywords" content="牧云者,人工智能,云计算,数据挖掘,hexo,blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive 数据倾斜解决方案">
+<meta property="og:url" content="http://muyunzhe.com/cloud-computing/storage/hive-数据倾斜解决方案/index.html">
+<meta property="og:site_name" content="牧云者">
+<meta property="og:description" content="数据倾斜是hive工程中常见的情况。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://muyunzhe.com/img/mr.jpg">
+<meta property="og:image" content="http://muyunzhe.com/img/skew_join.jpg">
+<meta property="og:updated_time" content="2019-03-31T10:48:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive 数据倾斜解决方案">
+<meta name="twitter:description" content="数据倾斜是hive工程中常见的情况。">
+<meta name="twitter:image" content="http://muyunzhe.com/img/mr.jpg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://muyunzhe.com/cloud-computing/storage/hive-数据倾斜解决方案/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>hive 数据倾斜解决方案 | 牧云者</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">牧云者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">牧云者,心乘大气,驾于天也！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://muyunzhe.com/cloud-computing/storage/hive-数据倾斜解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="muyunzhe">
+      <meta itemprop="description" content="专注于云计算、数据挖掘、机器学习领域的那些事,分享关于hive、spark、flink、machine learning以及互联网金融相关技术的所学所悟。">
+      <meta itemprop="image" content="/img/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧云者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">hive 数据倾斜解决方案
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-07-21 16:23:28" itemprop="dateCreated datePublished" datetime="2017-07-21T16:23:28+08:00">2017-07-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-31 18:48:36" itemprop="dateModified" datetime="2019-03-31T18:48:36+08:00">2019-03-31</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/cloud-computing/" itemprop="url" rel="index"><span itemprop="name">cloud-computing</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/cloud-computing/storage/" itemprop="url" rel="index"><span itemprop="name">storage</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>数据倾斜是hive工程中常见的情况。<br> <a id="more"></a><br> 对sum，count,max,min来说，不存在数据倾斜问题。<br> 在开始之前，先把MR的流程图帖出来（摘自Hadoop权威指南），方便后面对照。<br> <img src="/img/mr.jpg" alt="mr"></p>
+<h2 id="表现"><a href="#表现" class="headerlink" title="表现"></a>表现</h2><p>任务进度长时间维持在99%（或100%），查看任务监控页面，发现只有少量（1个或几个）reduce子任务未完成。</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>  1)、key分布不均匀<br>  2)、业务数据本身的特性<br>  3)、建表时考虑不周<br>  4)、某些SQL语句本身就有数据倾斜</p>
+<h2 id="map阶段的优化"><a href="#map阶段的优化" class="headerlink" title="map阶段的优化"></a>map阶段的优化</h2><ul>
+<li>mapred.min.split.size指的是数据的最小分割单元大小。</li>
+<li>mapred.max.split.size指的是数据的最大分割单元大小。</li>
+<li>dfs.block.size指的是HDFS设置的数据块大小。<br>一般来说dfs.block.size这个值是一个已经指定好的值，而且这个参数hive是识别不到的,所以实际上只有mapred.min.split.size和mapred.max.split.size这两个参数来决定map数量。在hive中min的默认值是1B，max的默认值是256MB.<br>所以如果不做修改的话，就是1个map task处理256MB数据，我们就以调整max为主。通过调整max可以起到调整map数的作用，减小max可以增加map数，增大max可以减少map数。需要提醒的是，直接调整mapred.map.tasks这个参数是没有效果的。<br>调整大小的时机根据查询的不同而不同，总的来讲可以通过观察map task的完成时间来确定是否需要增加map资源。如果map task的完成时间都是接近1分钟，甚至几分钟了，那么往往增加map数量，使得每个map task处理的数据量减少，能够让map task更快完成；而如果map task的运行时间已经很少了，比如10-20秒，这个时候增加map不太可能让map task更快完成，反而可能因为map需要的初始化时间反而让job总体速度变慢，这个时候反而需要考虑是否可以把map的数量减少，这样可以节省更多资源给其他Job。</li>
+</ul>
+<h2 id="reduce阶段的优化"><a href="#reduce阶段的优化" class="headerlink" title="reduce阶段的优化"></a>reduce阶段的优化</h2><p>与map优化不同的是，reduce优化时，可以直接设置mapred.reduce.tasks参数从而直接指定reduce的个数。当然直接指定reduce个数虽然比较方便，但是不利于自动扩展。Reduce数的设置虽然相较map更灵活，但是也可以像map一样设定一个自动生成规则，这样运行定时job的时候就不用担心原来设置的固定reduce数会由于数据量的变化而不合适。</p>
+<h2 id="map与reduce之间的优化"><a href="#map与reduce之间的优化" class="headerlink" title="map与reduce之间的优化"></a>map与reduce之间的优化</h2><p>map phase和reduce phase之间主要有3道工序。首先要把map输出的结果进行排序后做成中间文件，其次这个中间文件就能分发到各个reduce，最后reduce端在执行reduce phase之前把收集到的排序子文件合并成一个排序文件。需要强调的是，虽然这个部分可以调的参数挺多，但是大部分在一般情况下都是不要调整的，除非能精准的定位到这个部分有问题。</p>
+<p>spill<br>在spill阶段，由于内存不够，数据可能没办法在内存中一次性排序完成，那么就只能把局部排序的文件先保存到磁盘上，这个动作叫spill，然后spill出来的多个文件可以在最后进行merge。如果发生spill，可以通过设置io.sort.mb来增大mapper输出buffer的大小，避免spill的发生。另外合并时可以通过设置io.sort.factor来使得一次性能够合并更多的数据，默认值为10，也就是一次归并10个文件。调试参数的时候，一个要看spill的时间成本，一个要看merge的时间成本，还需要注意不要撑爆内存（io.sort.mb是算在map的内存里面的）。Reduce端的merge也是一样可以用io.sort.factor。一般情况下这两个参数很少需要调整，除非很明确知道这个地方是瓶颈。比如如果map端的输出太大，考虑到map数不一定能很方便的调整，那么这个时候就要考虑调大io.sort.mb（不过即使调大也要注意不能超过jvm heap size）。而map端的输出很大，要么是每个map读入了很大的文件（比如不能split的大gz压缩文件），要么是计算逻辑导致输出膨胀了很多倍，都是比较少见的情况。</p>
+<p>Copy<br>这里说的copy，一般叫做shuffle更加常见。但是由于一开始的配图以及MR job的web监控页对这个环节都是叫copy phase，指代更加精确，所以这里称为copy。</p>
+<p>copy阶段是把文件从map端copy到reduce端。默认情况下在5%的map完成的情况下reduce就开始启动copy，这个有时候是很浪费资源的，因为reduce一旦启动就被占用，一直等到map全部完成，收集到所有数据才可以进行后面的动作，所以我们可以等比较多的map完成之后再启动reduce流程，这个比例可以通过mapred.reduce.slowstart.completed.maps去调整，他的默认值就是5%。如果觉得这么做会减慢reduce端copy的进度，可以把copy过程的线程增大。tasktracker.http.threads可以决定作为server端的map用于提供数据传输服务的线程，mapred.reduce.parallel.copies可以决定作为client端的reduce同时从map端拉取数据的并行度（一次同时从多少个map拉数据），修改参数的时候这两个注意协调一下，server端能处理client端的请求即可。</p>
+<p>另外，在shuffle阶段可能会出现的OOM问题，原因比较复杂，一般认为是内存分配不合理，GC无法及时释放内存导致。对于这个问题，可以尝试调低shuffle buffer的控制参数mapred.job.shuffle.input.buffer.percent这个比例值，默认值0.7，即shuffle buffer占到reduce task heap size的70%。另外也可以直接尝试增加reduce数量。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="group-by类"><a href="#group-by类" class="headerlink" title="group by类"></a>group by类</h3><p>hive.map.aggr=true; #Map 端部分聚合，相当于Combiner，也就是在mapper里面做聚合。这个方法不同于直接写mapreduce的时候可以实现的combiner，但是却实现了类似combiner的效果。<br>hive.groupby.skewindata; 意思是做reduce操作的时候，拿到的key并不是所有相同值给同一个reduce，而是随机分发，然后reduce做聚合，做完之后再做一轮MR，拿前面聚合过的数据再算结果。所以这个参数其实跟hive.map.aggr做的是类似的事情，只是拿到reduce端来做，而且要额外启动一轮job，所以其实不怎么推荐用，效果不明显。</p>
+<h3 id="count-distinct类"><a href="#count-distinct类" class="headerlink" title="count distinct类"></a>count distinct类</h3><p>使用disticnt函数，所有的数据只会shuffle到一个reducer上，导致reducer数据倾斜严重。<br>count(*) 可以在多个reduce上执行。<br>直接改写sql<br><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*改写前*/</span></span><br><span class="line"><span class="keyword">select</span> a, <span class="built_in">count</span>(<span class="keyword">distinct</span> b) <span class="keyword">as</span> c <span class="keyword">from</span> tbl <span class="keyword">group</span> <span class="keyword">by</span> a;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*改写后*/</span></span><br><span class="line"><span class="keyword">select</span> a, <span class="built_in">count</span>(*) <span class="keyword">as</span> c <span class="keyword">from</span> (<span class="keyword">select</span> a, b <span class="keyword">from</span> tbl <span class="keyword">group</span> <span class="keyword">by</span> a, b) <span class="keyword">group</span> <span class="keyword">by</span> a;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Join类"><a href="#Join类" class="headerlink" title="Join类"></a>Join类</h3><h4 id="大表与大表"><a href="#大表与大表" class="headerlink" title="大表与大表"></a>大表与大表</h4><ol>
+<li><p>设置参数<br>set hive.optimize.skewjoin = true;<br>set hive.skewjoin.key=100000; 这个是join的键对应的记录条数超过这个值则会进行优化。<br>有数据倾斜的时候进行负载均衡，当选项设定为 true，生成的查询计划会有两个 MR Job。第一个 MR Job 中，Map 的输出结果集合会随机分布到 Reduce 中，每个 Reduce 做部分聚合操作，并输出结果到hdfs，这样处理的结果是相同的 Group By Key 有可能被分发到不同的 Reduce 中，从而达到负载均衡的目的；第二个 MR Job 再根据预处理的数据结果按照 Group By Key 分布到 Reduce 中（这个过程可以保证相同的 Group By Key 被分布到同一个 Reduce 中），最后完成最终的聚合操作。<br><img src="/img/skew_join.jpg" alt="skew_join"></p>
+</li>
+<li><p>加随机数<br>就是在join的时候增加一个随机数，随机数的取值范围n相当于将item给分散到n个reducer。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> a.*, b.*</span><br><span class="line"><span class="keyword">from</span> (<span class="keyword">select</span> *, <span class="keyword">cast</span>(<span class="keyword">rand</span>() * <span class="number">10</span> <span class="keyword">as</span> <span class="built_in">int</span>) <span class="keyword">as</span> r_id <span class="keyword">from</span> <span class="keyword">logs</span>)a</span><br><span class="line"><span class="keyword">join</span> (<span class="keyword">select</span> *, r_id <span class="keyword">from</span> items</span><br><span class="line"><span class="keyword">lateral</span> <span class="keyword">view</span> <span class="keyword">explode</span>(range_list(<span class="number">1</span>,<span class="number">10</span>)) rl <span class="keyword">as</span> r_id)b</span><br><span class="line"><span class="keyword">on</span> a.item_id = b.item_id <span class="keyword">and</span> a.r_id = b.r_id</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>上面的写法里，对行为表的每条记录生成一个1-10的随机整数，对于item属性表，每个item生成10条记录，随机key分别也是1-10，这样就能保证行为表关联上属性表。其中range_list(1,10)代表用udf实现的一个返回1-10整数序列的方法。这个做法是一个解决join倾斜比较根本性的通用思路，就是如何用随机数将key进行分散。当然，可以根据具体的业务场景做实现上的简化或变化。</p>
+<h4 id="小表与大表"><a href="#小表与大表" class="headerlink" title="小表与大表"></a>小表与大表</h4><p>如何Join：<br>关于驱动表的选取，选用join key分布最均匀的表作为驱动表<br>做好列裁剪和filter操作，以达到两表做join的时候，数据量相对变小的效果。<br>大小表Join：<br>使用map join让小的维度表（1000条以下的记录条数,小于25m） 先进内存。在map端完成reduce.<br><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="comment">/*+mapjoin(a)*/</span> <span class="built_in">count</span>(<span class="number">1</span>) <span class="keyword">from</span> tb_a a <span class="keyword">left</span> <span class="keyword">outer</span> <span class="keyword">join</span> tb_b b <span class="keyword">on</span> a.uid=b.uid；</span><br></pre></td></tr></table></figure></p>
+<h4 id="有空值的key："><a href="#有空值的key：" class="headerlink" title="有空值的key："></a>有空值的key：</h4><p>把空值的key变成一个字符串加上随机数，把倾斜的数据分到不同的reduce上，由于null值关联不上，处理后并不影响最终结果。<br>count distinct大量相同特殊值<br>count distinct时，将值为空的情况单独处理，如果是计算count distinct，可以不用处理，直接过滤，在最后结果中加1。如果还有其他计算，需要进行group by，可以先将值为空的记录单独处理，再和其他计算结果进行union。<br>group by维度过小：<br>采用sum() group by的方式来替换count(distinct)完成计算。<br>特殊情况特殊处理：<br>在业务逻辑优化效果的不大情况下，有些时候是可以将倾斜的数据单独拿出来处理。最后union回去。<br>如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> *</span><br><span class="line">  <span class="keyword">from</span> <span class="keyword">log</span> a</span><br><span class="line">  <span class="keyword">left</span> <span class="keyword">outer</span> <span class="keyword">join</span> <span class="keyword">users</span> b</span><br><span class="line">  <span class="keyword">on</span> <span class="keyword">case</span> <span class="keyword">when</span> a.user_id <span class="keyword">is</span> <span class="literal">null</span> <span class="keyword">then</span> <span class="keyword">concat</span>(‘hive’,<span class="keyword">rand</span>() ) <span class="keyword">else</span> a.user_id <span class="keyword">end</span> = b.user_id;</span><br></pre></td></tr></table></figure></p>
+<h4 id="不同数据类型关联产生数据倾斜"><a href="#不同数据类型关联产生数据倾斜" class="headerlink" title="不同数据类型关联产生数据倾斜"></a>不同数据类型关联产生数据倾斜</h4><p>用户表中user_id字段为int，log表中user_id字段既有string类型也有int类型。当按照user_id进行两个表的Join操作时，默认的Hash操作会按int型的id来进行分配，这样会导致所有string类型id的记录都分配到一个Reducer中。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select * <span class="keyword">from</span><span class="built_in"> users </span>a</span><br><span class="line">  left outer join logs b</span><br><span class="line">  on a.usr_id = cast(b.user_id as string)</span><br></pre></td></tr></table></figure></p>
+<h4 id="小表不小不大，怎么用-map-join-解决倾斜问题"><a href="#小表不小不大，怎么用-map-join-解决倾斜问题" class="headerlink" title="小表不小不大，怎么用 map join 解决倾斜问题"></a>小表不小不大，怎么用 map join 解决倾斜问题</h4><p>使用 map join 解决小表(记录数少)关联大表的数据倾斜问题，这个方法使用的频率非常高，但如果小表很大，大到不能放入内存处理，那么把小表分发到不同的map也是个不小的开销。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">log</span> a</span><br><span class="line">  <span class="keyword">left</span> <span class="keyword">outer</span> <span class="keyword">join</span> (</span><br><span class="line">    <span class="keyword">select</span>  d.*</span><br><span class="line">      <span class="keyword">from</span> ( <span class="keyword">select</span> <span class="keyword">distinct</span> user_id <span class="keyword">from</span> <span class="keyword">log</span> ) c</span><br><span class="line">      <span class="keyword">join</span> <span class="keyword">users</span> d</span><br><span class="line">      <span class="keyword">on</span> c.user_id = d.user_id</span><br><span class="line">    ) x</span><br><span class="line">  <span class="keyword">on</span> a.user_id = b.user_id;</span><br></pre></td></tr></table></figure></p>
+<h3 id="distribute-by类"><a href="#distribute-by类" class="headerlink" title="distribute by类"></a>distribute by类</h3><p>distribute by是控制在map端如何拆分数据给reduce端的。hive会根据distribute by后面列，对应reduce的个数进行分发，默认是采用hash算法。sort by为每个reduce产生一个排序文件。在有些情况下，你需要控制某个特定行应该到哪个reducer，这通常是为了进行后续的聚集操作。distribute by刚好可以做这件事。因此，distribute by经常和sort by配合使用。</p>
+<h3 id="sql整体优化"><a href="#sql整体优化" class="headerlink" title="sql整体优化"></a>sql整体优化</h3><h4 id="job间并行"><a href="#job间并行" class="headerlink" title="job间并行"></a>job间并行</h4><p>设置job间并行的参数是hive.exec.parallel，将其设为true即可。默认的并行度为8，也就是最多允许sql中8个job并行。如果想要更高的并行度，可以通过hive.exec.parallel. thread.number参数进行设置，但要避免设置过大而占用过多资源。</p>
+<h4 id="减少job数量"><a href="#减少job数量" class="headerlink" title="减少job数量"></a>减少job数量</h4><p>通过代码优化</p>
+<h4 id="控制map数"><a href="#控制map数" class="headerlink" title="控制map数"></a>控制map数</h4><p>两种方式控制Map数<br>减少map数可以通过合并小文件来实现，这点是对文件数据源来讲，下面介绍。<br>增加map数的可以通过控制上一个job的reduer数来控制.</p>
+<h4 id="控制reduce数"><a href="#控制reduce数" class="headerlink" title="控制reduce数"></a>控制reduce数</h4><p>有多少个reduce,就会有多少个输出文件。</p>
+<h4 id="合并小文件"><a href="#合并小文件" class="headerlink" title="合并小文件"></a>合并小文件</h4><p>是否合并Map输出文件：hive.merge.mapfiles=true（默认值为真）<br>是否合并Reduce 端输出文件：hive.merge.mapredfiles=false（默认值为假）<br>Map输入合并：<br>set mapred.max.split.size=1000000000;<br>set mapred.min.split.size.per.node=1000000000;<br>set mapred.min.split.size.per.rack=1000000000;<br>set hive.merge.size.per.task=25610001000（默认值为 256000000）</p>
+<p>上面部分是针对从很多小文件的表里读取的时候用的，并不能合并小文件。<br>以下配置在合并小文件时亲测有效<br>hive结果合并：<br>set hive.merge.mapfiles=true;<br>set hive.merge.mapredfiles=true;<br>set hive.merge.smallfiles.avgsize=256000000;<br>set hive.merge.size.per.task=256000000;</p>
+<p>以下是个小集合：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">-- 动态分区</span><br><span class="line"><span class="builtin-name">SET</span> hive.exec.dynamic.<span class="attribute">partition</span>=<span class="literal">true</span>;</span><br><span class="line"><span class="builtin-name">SET</span> hive.exec.dynamic.partition.<span class="attribute">mode</span>=nonstrict;</span><br><span class="line"><span class="builtin-name">SET</span> hive.exec.max.dynamic.partitions.<span class="attribute">pernode</span>=10000;</span><br><span class="line"><span class="builtin-name">SET</span> hive.exec.max.dynamic.<span class="attribute">partitions</span>=100000;</span><br><span class="line"><span class="builtin-name">SET</span> hive.exec.max.created.<span class="attribute">files</span>=1000000;</span><br><span class="line"></span><br><span class="line">-- map读入合并</span><br><span class="line"><span class="builtin-name">set</span> hive.input.<span class="attribute">format</span>=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;</span><br><span class="line"><span class="builtin-name">set</span> mapred.max.split.<span class="attribute">size</span>=4294967296;</span><br><span class="line"><span class="builtin-name">set</span> mapred.min.split.size.per.<span class="attribute">node</span>=4294967296;</span><br><span class="line"><span class="builtin-name">set</span> mapred.min.split.size.per.<span class="attribute">rack</span>=4294967296;</span><br><span class="line"></span><br><span class="line">-- hive输出合并</span><br><span class="line"><span class="builtin-name">set</span> hive.merge.<span class="attribute">mapfiles</span>=<span class="literal">true</span>;</span><br><span class="line"><span class="builtin-name">set</span> hive.merge.<span class="attribute">mapredfiles</span>=<span class="literal">true</span>;</span><br><span class="line"><span class="builtin-name">set</span> hive.merge.smallfiles.<span class="attribute">avgsize</span>=256000000;</span><br><span class="line"><span class="builtin-name">set</span> hive.merge.size.per.<span class="attribute">task</span>=256000000;</span><br><span class="line"></span><br><span class="line">-- 输出压缩</span><br><span class="line"><span class="builtin-name">SET</span> mapred.output.<span class="attribute">compress</span>=<span class="literal">true</span>;</span><br><span class="line"><span class="builtin-name">SET</span> mapred.output.compression.<span class="attribute">type</span>=BLOCK;</span><br><span class="line"><span class="builtin-name">SET</span> mapred.output.compression.<span class="attribute">codec</span>=org.apache.hadoop.io.compress.Lz4Codec;</span><br><span class="line"><span class="builtin-name">SET</span> mapred.map.output.compression.<span class="attribute">codec</span>=org.apache.hadoop.io.compress.Lz4Codec;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="muyunzhe wechat" style="width: 200px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>muyunzhe</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="http://muyunzhe.com/cloud-computing/storage/hive-数据倾斜解决方案/" title="hive 数据倾斜解决方案">http://muyunzhe.com/cloud-computing/storage/hive-数据倾斜解决方案/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/storage/" rel="tag"># storage</a>
+          
+            <a href="/tags/hive/" rel="tag"># hive</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/artificial-intelligence/machine-learning/GBDT-LR模型实现离线-实时特征层次化预测/" rel="next" title="GBDT+LR模型实现离线+实时特征层次化预测">
+                <i class="fa fa-chevron-left"></i> GBDT+LR模型实现离线+实时特征层次化预测
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/artificial-intelligence/machine-learning/机器学习之特征选择/" rel="prev" title="机器学习之特征选择">
+                机器学习之特征选择 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/img/header.jpg" alt="muyunzhe">
+            
+              <p class="site-author-name" itemprop="name">muyunzhe</p>
+              <div class="site-description motion-element" itemprop="description">专注于云计算、数据挖掘、机器学习领域的那些事,分享关于hive、spark、flink、machine learning以及互联网金融相关技术的所学所悟。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/muyunzhe" title="GitHub &rarr; https://github.com/muyunzhe" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:lonelydream@163.com" title="E-Mail &rarr; mailto:lonelydream@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/gudaojuechen" title="Weibo &rarr; https://weibo.com/gudaojuechen" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#表现"><span class="nav-number">1.</span> <span class="nav-text">表现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map阶段的优化"><span class="nav-number">3.</span> <span class="nav-text">map阶段的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reduce阶段的优化"><span class="nav-number">4.</span> <span class="nav-text">reduce阶段的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map与reduce之间的优化"><span class="nav-number">5.</span> <span class="nav-text">map与reduce之间的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">6.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#group-by类"><span class="nav-number">6.1.</span> <span class="nav-text">group by类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#count-distinct类"><span class="nav-number">6.2.</span> <span class="nav-text">count distinct类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Join类"><span class="nav-number">6.3.</span> <span class="nav-text">Join类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#大表与大表"><span class="nav-number">6.3.1.</span> <span class="nav-text">大表与大表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小表与大表"><span class="nav-number">6.3.2.</span> <span class="nav-text">小表与大表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有空值的key："><span class="nav-number">6.3.3.</span> <span class="nav-text">有空值的key：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不同数据类型关联产生数据倾斜"><span class="nav-number">6.3.4.</span> <span class="nav-text">不同数据类型关联产生数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小表不小不大，怎么用-map-join-解决倾斜问题"><span class="nav-number">6.3.5.</span> <span class="nav-text">小表不小不大，怎么用 map join 解决倾斜问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distribute-by类"><span class="nav-number">6.4.</span> <span class="nav-text">distribute by类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sql整体优化"><span class="nav-number">6.5.</span> <span class="nav-text">sql整体优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#job间并行"><span class="nav-number">6.5.1.</span> <span class="nav-text">job间并行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#减少job数量"><span class="nav-number">6.5.2.</span> <span class="nav-text">减少job数量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#控制map数"><span class="nav-number">6.5.3.</span> <span class="nav-text">控制map数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#控制reduce数"><span class="nav-number">6.5.4.</span> <span class="nav-text">控制reduce数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#合并小文件"><span class="nav-number">6.5.5.</span> <span class="nav-text">合并小文件</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">muyunzhe</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a></div>
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('5');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

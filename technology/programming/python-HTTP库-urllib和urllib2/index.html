@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="google4762031ea0163586.html">
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="baidu_verify_PLjBgmPD2S.html">
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.0.1',
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="urllib和urllib2模块都做与请求URL相关的操作，但他们提供不同的功能。urllib2.urlopen accepts an instance of the Request class or a url, （whereas urllib.urlopen only accepts a url 中文意思就是：urllib2.urlopen可以接受一个Request对象或者url，（在接受Re">
+<meta name="keywords" content="牧云者,人工智能,云计算,数据挖掘,hexo,blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python HTTP库 urllib和urllib2">
+<meta property="og:url" content="http://muyunzhe.com/technology/programming/python-HTTP库-urllib和urllib2/index.html">
+<meta property="og:site_name" content="牧云者">
+<meta property="og:description" content="urllib和urllib2模块都做与请求URL相关的操作，但他们提供不同的功能。urllib2.urlopen accepts an instance of the Request class or a url, （whereas urllib.urlopen only accepts a url 中文意思就是：urllib2.urlopen可以接受一个Request对象或者url，（在接受Re">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-31T10:48:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python HTTP库 urllib和urllib2">
+<meta name="twitter:description" content="urllib和urllib2模块都做与请求URL相关的操作，但他们提供不同的功能。urllib2.urlopen accepts an instance of the Request class or a url, （whereas urllib.urlopen only accepts a url 中文意思就是：urllib2.urlopen可以接受一个Request对象或者url，（在接受Re">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://muyunzhe.com/technology/programming/python-HTTP库-urllib和urllib2/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>python HTTP库 urllib和urllib2 | 牧云者</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">牧云者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">牧云者,心乘大气,驾于天也！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://muyunzhe.com/technology/programming/python-HTTP库-urllib和urllib2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="muyunzhe">
+      <meta itemprop="description" content="专注于云计算、数据挖掘、机器学习领域的那些事,分享关于hive、spark、flink、machine learning以及互联网金融相关技术的所学所悟。">
+      <meta itemprop="image" content="/img/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧云者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">python HTTP库 urllib和urllib2
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-07-29 18:28:07" itemprop="dateCreated datePublished" datetime="2016-07-29T18:28:07+08:00">2016-07-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-31 18:48:36" itemprop="dateModified" datetime="2019-03-31T18:48:36+08:00">2019-03-31</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/technology/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>urllib和urllib2模块都做与请求URL相关的操作，但他们提供不同的功能。<br>urllib2.urlopen accepts an instance of the Request class or a url, （whereas urllib.urlopen only accepts a url 中文意思就是：urllib2.urlopen可以接受一个Request对象或者url，（在接受Request对象时候，并以此可以来设置一个URL的headers），urllib.urlopen只接收一个url<br>urllib 有urlencode,urllib2没有，这也是为什么总是urllib，urllib2常会一起使用的原因<br><a id="more"></a></p>
+<h1 id="Proxy-的设置"><a href="#Proxy-的设置" class="headerlink" title="Proxy 的设置"></a>Proxy 的设置</h1><p>urllib2 默认会使用环境变量 http_proxy 来设置 HTTP Proxy。如果想在程序中明确控制 Proxy 而不受环境变量的影响，可以使用下面的方式<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">import</span> urllib2</span><br><span class="line"></span><br><span class="line"><span class="attr">enable_proxy</span> = True</span><br><span class="line"><span class="attr">proxy_handler</span> = urllib2.ProxyHandler(&#123;<span class="string">"http"</span> : 'http://some-proxy.com:<span class="number">8080</span>'&#125;)</span><br><span class="line"><span class="attr">null_proxy_handler</span> = urllib2.ProxyHandler(&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> enable_proxy:</span><br><span class="line">    <span class="attr">opener</span> = urllib2.build_opener(proxy_handler)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="attr">opener</span> = urllib2.build_opener(null_proxy_handler)</span><br><span class="line"></span><br><span class="line">urllib2.install_opener(opener)</span><br></pre></td></tr></table></figure></p>
+<p>这里要注意的一个细节，使用 urllib2.install_opener() 会设置 urllib2 的全局 opener 。这样后面的使用会很方便，但不能做更细粒度的控制，比如想在程序中使用两个不同的 Proxy 设置等。比较好的做法是不使用 install_opener 去更改全局的设置，而只是直接调用 opener 的 open 方法代替全局的 urlopen 方法。</p>
+<h1 id="Timeout-设置"><a href="#Timeout-设置" class="headerlink" title="Timeout 设置"></a>Timeout 设置</h1><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">import</span> urllib2</span><br><span class="line"><span class="attr">response</span> = urllib2.urlopen('http://www.google.com', <span class="attr">timeout=10)</span></span><br></pre></td></tr></table></figure>
+<h1 id="在-HTTP-Request-中加入特定的-Header"><a href="#在-HTTP-Request-中加入特定的-Header" class="headerlink" title="在 HTTP Request 中加入特定的 Header"></a>在 HTTP Request 中加入特定的 Header</h1><p>在 HTTP Request 中加入特定的 Header<br>要加入 header，需要使用 Request 对象:<br><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">request</span> = urllib2.<span class="built_in">Request</span>(uri)</span><br><span class="line"><span class="built_in">request</span>.add_header(<span class="comment">'User-Agent', 'fake-client')</span></span><br><span class="line"><span class="built_in">response</span> = urllib2.urlopen(<span class="built_in">request</span>)</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>User-Agent : 有些服务器或 Proxy 会通过该值来判断是否是浏览器发出的请求<br>Content-Type : 在使用 REST 接口时，服务器会检查该值，用来确定 HTTP Body 中的内容该怎样解析。常见的取值有：<br>  application/xml ： 在 XML RPC，如 RESTful/SOAP 调用时使用<br>  application/json ： 在 JSON RPC 调用时使用<br>  application/x-www-form-urlencoded ： 浏览器提交 Web 表单时使用<br>在使用服务器提供的 RESTful 或 SOAP 服务时， Content-Type 设置错误会导致服务器拒绝服务</p>
+</blockquote>
+<h1 id="Redirect"><a href="#Redirect" class="headerlink" title="Redirect"></a>Redirect</h1><p>urllib2 默认情况下会针对 HTTP 3XX 返回码自动进行 redirect 动作，无需人工配置。要检测是否发生了 redirect 动作，只要检查一下 Response 的 URL 和 Request 的 URL 是否一致就可以了。<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">response</span> = urllib2.urlopen(<span class="string">'http://www.google.cn'</span>)</span><br><span class="line"><span class="attr">redirected</span> = response.geturl() == <span class="string">'http://www.google.cn'</span></span><br></pre></td></tr></table></figure></p>
+<p>如果不想自动 redirect，除了使用更低层次的 httplib 库之外，还可以自定义 HTTPRedirectHandler 类。</p>
+<h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cookie = cookielib.CookieJar()</span><br><span class="line">opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))</span><br><span class="line">response = opener.<span class="built_in">open</span>(<span class="string">'http://www.google.com'</span>)</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">item</span> <span class="keyword">in</span> cookie:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">item</span>.name == <span class="string">'some_cookie_item_name'</span>:</span><br><span class="line">        print <span class="keyword">item</span>.<span class="built_in">value</span></span><br></pre></td></tr></table></figure>
+<h1 id="使用-HTTP-的-PUT-和-DELETE-方法"><a href="#使用-HTTP-的-PUT-和-DELETE-方法" class="headerlink" title="使用 HTTP 的 PUT 和 DELETE 方法"></a>使用 HTTP 的 PUT 和 DELETE 方法</h1><p>urllib2 只支持 HTTP 的 GET 和 POST 方法，如果要使用 HTTP PUT 和 DELETE ，只能使用比较低层的 httplib 库。虽然如此，我们还是能通过下面的方式，使 urllib2 能够发出 PUT 或 DELETE 的请求：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">request</span> = urllib2.Request(uri, data=data)</span><br><span class="line"><span class="attr">request.get_method</span> = lambda: <span class="string">'PUT'</span> # or <span class="string">'DELETE'</span></span><br><span class="line"><span class="attr">response</span> = urllib2.urlopen(request)</span><br></pre></td></tr></table></figure></p>
+<h1 id="得到-HTTP-的返回码"><a href="#得到-HTTP-的返回码" class="headerlink" title="得到 HTTP 的返回码"></a>得到 HTTP 的返回码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    response = urllib2.urlopen(<span class="string">'http://restrict.web.com'</span>)</span><br><span class="line"><span class="keyword">except</span> urllib2.HTTPError, e:</span><br><span class="line">    <span class="keyword">print</span> e.code</span><br></pre></td></tr></table></figure>
+<h1 id="Debug-Log"><a href="#Debug-Log" class="headerlink" title="Debug Log"></a>Debug Log</h1><h1 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h1><h2 id="URLError异常"><a href="#URLError异常" class="headerlink" title="URLError异常"></a>URLError异常</h2><p>通常引起URLError的原因是：无网络连接（没有到目标服务器的路由）、访问的目标服务器不存在。在这种情况下，异常对象会有reason属性（是一个（错误码、错误原因）的元组）。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">url</span>=<span class="string">"http://www.baidu.com/"</span></span><br><span class="line">try:</span><br><span class="line">    <span class="attribute">response</span>=urllib2.urlopen(url)</span><br><span class="line">except urllib2.URLError,e:</span><br><span class="line">    <span class="builtin-name">print</span> e.reason</span><br></pre></td></tr></table></figure></p>
+<h2 id="HTTPError"><a href="#HTTPError" class="headerlink" title="HTTPError"></a>HTTPError</h2><p>每一个从服务器返回的HTTP响应都有一个状态码。其中，有的状态码表示服务器不能完成相应的请求，默认的处理程序可以为我们处理一些这样的状态码（如返回的响应是重定向，urllib2会自动为我们从重定向后的页面中获取信息）。有些状态码，urllib2模块不能帮我们处理，那么urlopen函数就会引起HTTPError异常,其中典型的有404/401。<br>HTTPError异常的实例有整数类型的code属性，表示服务器返回的错误状态码。<br>urllib2模块默认的处理程序可以处理重定向（状态码是300范围），而且状态码在100-299范围内表示成功。因此，能够引起HTTPError异常的状态码范围是：400-599.<br>当引起错误时，服务器会返回HTTP错误码和错误页面。你可以将HTPError实例作为返回页面，这意味着，HTTPError实例不仅有code属性，还有read、geturl、info等方法。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">url</span>=<span class="string">"http://cs.scu.edu.cn/~duanlei"</span></span><br><span class="line">try:</span><br><span class="line">    <span class="attribute">response</span>=urllib2.urlopen(url)</span><br><span class="line">except urllib2.HTTPError,e:</span><br><span class="line">    <span class="builtin-name">print</span> e.code</span><br><span class="line">    <span class="builtin-name">print</span> e.read()</span><br></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>如果想在代码中处理URLError和HTTPError有两种方法，代码如下：<br>方法一<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">"xxxxxx"</span>  <span class="comment">#需要访问的URL</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    response=urllib2.urlopen(url)</span><br><span class="line"><span class="keyword">except</span> urllib2.HTTPError,e:    <span class="comment">#HTTPError必须排在URLError的前面</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"The server couldn't fulfill the request"</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Error code:"</span>,e.code</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Return content:"</span>,e.read()</span><br><span class="line"><span class="keyword">except</span> urllib2.URLError,e:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Failed to reach the server"</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"The reason:"</span>,e.reason</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment">#something you should do</span></span><br><span class="line">    <span class="keyword">pass</span>  <span class="comment">#其他异常的处理</span></span><br></pre></td></tr></table></figure></p>
+<p>方法二<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">url</span>=<span class="string">"http://xxx"</span>  #需要访问的URL</span><br><span class="line">try:</span><br><span class="line">    <span class="attribute">response</span>=urllib2.urlopen(url)</span><br><span class="line">except urllib2.URLError,e:</span><br><span class="line">    <span class="keyword">if</span> hasattr(e,<span class="string">"reason"</span>):</span><br><span class="line">        <span class="builtin-name">print</span> <span class="string">"Failed to reach the server"</span></span><br><span class="line">        <span class="builtin-name">print</span> <span class="string">"The reason:"</span>,e.reason</span><br><span class="line">    elif hasattr(e,<span class="string">"code"</span>):</span><br><span class="line">        <span class="builtin-name">print</span> <span class="string">"The server couldn't fulfill the request"</span></span><br><span class="line">        <span class="builtin-name">print</span> <span class="string">"Error code:"</span>,e.code</span><br><span class="line">        <span class="builtin-name">print</span> <span class="string">"Return content:"</span>,e.read()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    pass  #其他异常的处理</span><br></pre></td></tr></table></figure></p>
+<h1 id="urllib2各方法实例"><a href="#urllib2各方法实例" class="headerlink" title="urllib2各方法实例"></a>urllib2各方法实例</h1><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line">response = urllib2.urlopen(<span class="string">'http://python.org/'</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">"Response:"</span>, response</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the URL. This gets the real URL.</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">"The URL is: "</span>, response.geturl()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Getting the code</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">"This gets the code: "</span>, response.code</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the Headers.</span></span><br><span class="line"><span class="comment"># This returns a dictionary-like object that describes the page fetched,</span></span><br><span class="line"><span class="comment"># particularly the headers sent by the server</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">"The Headers are: "</span>, response.info()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the date part of the header</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">"The Date is: "</span>, response.info()[<span class="string">'date'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the server part of the header</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">"The Server is: "</span>, response.info()[<span class="string">'server'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get all data</span></span><br><span class="line">html = response.read()</span><br><span class="line"><span class="built_in">print</span> <span class="string">"Get all data: "</span>, html</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get only the length</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">"Get the length :"</span>, len(html)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Showing that the file object is iterable</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> response:</span><br><span class="line"> <span class="built_in">print</span> line.rstrip()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Note that the rstrip strips the trailing newlines and carriage returns before</span></span><br><span class="line"><span class="comment"># printing the output.</span></span><br></pre></td></tr></table></figure>
+<p>发送get请求demo例子：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># hello_http_get.py</span></span><br><span class="line"></span><br><span class="line">import httplib</span><br><span class="line"></span><br><span class="line"><span class="comment">#请求头</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">"cityId"</span>:<span class="string">"1337"</span>,</span><br><span class="line">    <span class="string">"userId"</span>:<span class="string">"1234"</span>,</span><br><span class="line">    <span class="string">"token"</span>:<span class="string">"abcd"</span>,</span><br><span class="line">    <span class="string">"device-id"</span>:<span class="string">"778E5992-6DD7-4AB9-B2CC-741F31134D6C"</span>,</span><br><span class="line">    <span class="string">"caller-id"</span>:<span class="string">"python-test"</span>,</span><br><span class="line">    <span class="string">"request-id"</span>:<span class="string">"2298760f18a846969725a7752331e3b8"</span>,</span><br><span class="line">    <span class="string">"platform"</span>:<span class="string">"5"</span>,</span><br><span class="line">    <span class="string">"platformVersion"</span>:<span class="string">"21"</span>,</span><br><span class="line">    <span class="string">"apiVersion"</span>:<span class="string">"21"</span>,</span><br><span class="line">    <span class="string">"Content-type"</span>:<span class="string">"application/json"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#请求参数</span></span><br><span class="line"><span class="attribute">params</span>=<span class="string">''</span></span><br><span class="line"><span class="comment">#请求资源</span></span><br><span class="line"><span class="attribute">resource_uri</span>=<span class="string">'/helloworld'</span></span><br><span class="line"><span class="comment">#请求方法</span></span><br><span class="line"><span class="attribute">method_type</span>=<span class="string">'GET'</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">httpClient</span>=None</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    <span class="builtin-name">print</span> headers</span><br><span class="line">    <span class="builtin-name">print</span> params</span><br><span class="line">    <span class="attribute">httpClient</span>=httplib.HTTPConnection('localhost',9020,timeout=30)</span><br><span class="line">    httpClient.request(method_type,resource_uri,params,headers)</span><br><span class="line"></span><br><span class="line">    #获取返回数据对象</span><br><span class="line">    <span class="attribute">response</span>=httpClient.getresponse()</span><br><span class="line">    <span class="builtin-name">print</span> response.status #HTTP返回状态</span><br><span class="line">    <span class="builtin-name">print</span> response.reason #HTTP返回状态描述</span><br><span class="line">    <span class="builtin-name">print</span> response.read() #输出返回数据</span><br><span class="line">except Exception,e:</span><br><span class="line">    <span class="builtin-name">print</span> e</span><br><span class="line">finally:</span><br><span class="line">    <span class="keyword">if</span> httpClient:</span><br><span class="line">        httpClient.close()</span><br></pre></td></tr></table></figure></p>
+<p>发送post请求demo例子：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># hello_http_post.py</span></span><br><span class="line"></span><br><span class="line">import httplib</span><br><span class="line">import urllib</span><br><span class="line">import json</span><br><span class="line"></span><br><span class="line"><span class="comment">#请求头</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">"cityId"</span>:<span class="string">"1337"</span>,</span><br><span class="line">    <span class="string">"userId"</span>:<span class="string">"1234"</span>,</span><br><span class="line">    <span class="string">"token"</span>:<span class="string">"abcd"</span>,</span><br><span class="line">    <span class="string">"device-id"</span>:<span class="string">"778E5992-6DD7-4AB9-B2CC-741F31134D6C"</span>,</span><br><span class="line">    <span class="string">"caller-id"</span>:<span class="string">"python-test"</span>,</span><br><span class="line">    <span class="string">"request-id"</span>:<span class="string">"2298760f18a846969725a7752331e3b8"</span>,</span><br><span class="line">    <span class="string">"platform"</span>:<span class="string">"5"</span>,</span><br><span class="line">    <span class="string">"platformVersion"</span>:<span class="string">"21"</span>,</span><br><span class="line">    <span class="string">"apiVersion"</span>:<span class="string">"21"</span>,</span><br><span class="line">    <span class="string">"Content-type"</span>:<span class="string">"application/json"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#请求参数</span></span><br><span class="line">params=&#123;</span><br><span class="line">    <span class="string">"houseId"</span> : <span class="string">"24230"</span>,</span><br><span class="line">    <span class="string">"houseTypeId"</span> : <span class="string">"0"</span>,</span><br><span class="line">    <span class="string">"userPhone"</span> : <span class="string">"13866554433"</span>,</span><br><span class="line">    <span class="string">"userName"</span> : <span class="string">"张三"</span>,</span><br><span class="line">    <span class="string">"houseName"</span> : <span class="string">"helloworld测试楼盘"</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#服务端约定为json格式</span></span><br><span class="line"><span class="attribute">params</span>=json.dumps(params)</span><br><span class="line"><span class="comment">#服务端约定为body:k1=v1&amp;k2=v2格式</span></span><br><span class="line"><span class="comment">#params=urllib.urlencode(params)</span></span><br><span class="line"><span class="comment">#请求资源</span></span><br><span class="line"><span class="attribute">resource_uri</span>=<span class="string">'/helloworld'</span></span><br><span class="line"><span class="comment">#请求方法</span></span><br><span class="line"><span class="attribute">method_type</span>=<span class="string">'POST'</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">httpClient</span>=None</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    <span class="builtin-name">print</span> headers</span><br><span class="line">    <span class="builtin-name">print</span> params</span><br><span class="line">    <span class="attribute">httpClient</span>=httplib.HTTPConnection('localhost',9020,timeout=30)</span><br><span class="line">    httpClient.request(method_type,resource_uri,params,headers)</span><br><span class="line"></span><br><span class="line">    #获取返回数据对象</span><br><span class="line">    <span class="attribute">response</span>=httpClient.getresponse()</span><br><span class="line">    <span class="builtin-name">print</span> response.status #HTTP返回状态</span><br><span class="line">    <span class="builtin-name">print</span> response.reason #HTTP返回状态描述</span><br><span class="line">    <span class="builtin-name">print</span> response.read() #输出返回数据</span><br><span class="line">except Exception,e:</span><br><span class="line">    <span class="builtin-name">print</span> e</span><br><span class="line">finally:</span><br><span class="line">    <span class="keyword">if</span> httpClient:</span><br><span class="line">        httpClient.close()</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="muyunzhe wechat" style="width: 200px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>muyunzhe</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="http://muyunzhe.com/technology/programming/python-HTTP库-urllib和urllib2/" title="python HTTP库 urllib和urllib2">http://muyunzhe.com/technology/programming/python-HTTP库-urllib和urllib2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/programming/" rel="tag"># programming</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cloud-computing/architecture/spark源码编译安装与IntelliJ源码阅读环境配置/" rel="next" title="spark源码编译安装与IntelliJ源码阅读环境配置">
+                <i class="fa fa-chevron-left"></i> spark源码编译安装与IntelliJ源码阅读环境配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/technology/programming/python-HTTP库：Request（初级）/" rel="prev" title="python HTTP库：Request（初级）">
+                python HTTP库：Request（初级） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/img/header.jpg" alt="muyunzhe">
+            
+              <p class="site-author-name" itemprop="name">muyunzhe</p>
+              <div class="site-description motion-element" itemprop="description">专注于云计算、数据挖掘、机器学习领域的那些事,分享关于hive、spark、flink、machine learning以及互联网金融相关技术的所学所悟。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/muyunzhe" title="GitHub &rarr; https://github.com/muyunzhe" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:lonelydream@163.com" title="E-Mail &rarr; mailto:lonelydream@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/gudaojuechen" title="Weibo &rarr; https://weibo.com/gudaojuechen" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Proxy-的设置"><span class="nav-number">1.</span> <span class="nav-text">Proxy 的设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Timeout-设置"><span class="nav-number">2.</span> <span class="nav-text">Timeout 设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在-HTTP-Request-中加入特定的-Header"><span class="nav-number">3.</span> <span class="nav-text">在 HTTP Request 中加入特定的 Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redirect"><span class="nav-number">4.</span> <span class="nav-text">Redirect</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cookie"><span class="nav-number">5.</span> <span class="nav-text">Cookie</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-HTTP-的-PUT-和-DELETE-方法"><span class="nav-number">6.</span> <span class="nav-text">使用 HTTP 的 PUT 和 DELETE 方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#得到-HTTP-的返回码"><span class="nav-number">7.</span> <span class="nav-text">得到 HTTP 的返回码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Debug-Log"><span class="nav-number">8.</span> <span class="nav-text">Debug Log</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异常处理"><span class="nav-number">9.</span> <span class="nav-text">异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#URLError异常"><span class="nav-number">9.1.</span> <span class="nav-text">URLError异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPError"><span class="nav-number">9.2.</span> <span class="nav-text">HTTPError</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#urllib2各方法实例"><span class="nav-number">11.</span> <span class="nav-text">urllib2各方法实例</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">muyunzhe</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a></div>
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('5');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
