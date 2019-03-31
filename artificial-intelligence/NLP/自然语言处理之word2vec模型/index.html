@@ -108,14 +108,14 @@
 <meta property="og:site_name" content="牧云者">
 <meta property="og:description" content="Word2Vec即Word to vector（词汇转向量）。我们希望词义相近的两个单词，在映射之后依然保持相近，词义很远的单词直接则保持很远的映射距离。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://muyunzhe.com/artificial-intelligence/NLP/自然语言处理之word2vec模型/model.jpg">
+<meta property="og:image" content="http://muyunzhe.com/model.jpg">
 <meta property="og:image" content="http://muyunzhe.com/img/softmax.png">
 <meta property="og:image" content="http://muyunzhe.com/img/log-likelihood.png">
-<meta property="og:updated_time" content="2019-03-31T12:08:35.000Z">
+<meta property="og:updated_time" content="2019-03-31T12:20:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自然语言处理之word2vec模型">
 <meta name="twitter:description" content="Word2Vec即Word to vector（词汇转向量）。我们希望词义相近的两个单词，在映射之后依然保持相近，词义很远的单词直接则保持很远的映射距离。">
-<meta name="twitter:image" content="http://muyunzhe.com/artificial-intelligence/NLP/自然语言处理之word2vec模型/model.jpg">
+<meta name="twitter:image" content="http://muyunzhe.com/model.jpg">
 
 
 
@@ -442,7 +442,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-31 20:08:35" itemprop="dateModified" datetime="2019-03-31T20:08:35+08:00">2019-03-31</time>
+                <time title="修改时间：2019-03-31 20:20:41" itemprop="dateModified" datetime="2019-03-31T20:20:41+08:00">2019-03-31</time>
               
             
           </span>
@@ -509,7 +509,7 @@
 
       
         <p>Word2Vec即Word to vector（词汇转向量）。我们希望词义相近的两个单词，在映射之后依然保持相近，词义很远的单词直接则保持很远的映射距离。<br> <a id="more"></a></p>
-<h2 id="Word2Vec结构"><a href="#Word2Vec结构" class="headerlink" title="Word2Vec结构"></a>Word2Vec结构</h2><p><img src="/artificial-intelligence/NLP/自然语言处理之word2vec模型/model.jpg" alt="skip-gram模型架构"></p>
+<h2 id="Word2Vec结构"><a href="#Word2Vec结构" class="headerlink" title="Word2Vec结构"></a>Word2Vec结构</h2><p><img src="/model.jpg" alt="skip-gram模型架构"></p>
 <h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p><img src="/img/softmax.png" alt="softmax函数"><br>极大化似然函数<br><img src="/img/log-likelihood.png" alt="极大似然函数"><br>上面式子是一个标准的概率语言模型的形式，但是上面式子求解起来成本非常高，因为第二项中有个Vocab，也就是字典的大小。<br>word2vec对上面图进行了改进，不在计算在整个词典中生成当前词的概率，而是从词典中『采样』k个.</p>
 <h2 id="关于Word2Vec实例总结为6步"><a href="#关于Word2Vec实例总结为6步" class="headerlink" title="关于Word2Vec实例总结为6步:"></a>关于Word2Vec实例总结为6步:</h2><h3 id="1、下载数据；"><a href="#1、下载数据；" class="headerlink" title="1、下载数据；"></a>1、下载数据；</h3><p>加载训练文本数据，属于无监督学习，所以文本数据没有标签</p>
 <h3 id="2、将原词汇数据转换为字典映射；"><a href="#2、将原词汇数据转换为字典映射；" class="headerlink" title="2、将原词汇数据转换为字典映射；"></a>2、将原词汇数据转换为字典映射；</h3><p>原词汇数据分词，取出指定的词频排前n的词，低频的词用‘UNK’表示，转换为字典映射。<br>按频率从高到低排序，现在我们的词汇文本变成了用数字编号替代的格式以及词汇表和逆词汇表。逆词汇只是编号为key,词汇为value。</p>
