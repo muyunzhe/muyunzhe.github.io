@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[NLP之语言模型]]></title>
+    <url>%2Fartificial-intelligence%2FNLP%2FNLP%E4%B9%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%2F</url>
+    <content type="text"><![CDATA[语言模型（Language Model），是用来计算一个句子出现概率的模型，即P(W1,W2,…Wk)。利用语言模型，可以确定哪个词序列的可能性更大，或者给定若干个词，可以预测下一个最可能出现的词语。 语言模型简介​ 假设有一个符号的集合 {W}，我们不妨把每一个 符号Wi称作一个“单词”，由零个或多个单词连接起来就组成了一个字符串 S=w1w2…wn，字符串可长可短，例如实际语言中的句子、段落或者文档都可以看作一个字符串。所有合法（例如，通过一些语法约束）的字符串的集合称作一个语言，而一个语言模型就是这个语言里的字符串的概率分布模型。 ​ 然而，Language Model实际上是非常通用的，任意由一些基本单元组成的序列都可以使用Language Model来分析，比如语音识别里面，基本单元就是音频信号，序列就是一句话。 算法一个 Language Model 要给出一个字符串的概率：P(S)=P(W1W2…Wn)，了解一点概率论知识的人应该都知道这个式子可以像这样分解： 例如，对于字符串 He eats apple ，我们有 P([He][eats][apple]) = P([He])P([eats]|[He])P([apple]|[He][eats]) ，其中 P([apple]|[He][eats]) 里 [He][eats] 是 [apple] 的上下文（也许称“上文”在这里更加形象一些），同一个单词，在不同的上下文中出现的概率实际上是不一样的，特别是在一个字符串中越靠后的词，它将有越“长”的上下文 。 在构造模型的时候，我们可以通过统计训练数据里各个单词（在各个 context 之下）出现的频率来近似逼近它的概率，那么，本身随着 context 长度的增长，所有可能的情况也会爆炸性地增长，训练数据不可能覆盖所有，更严重的是，要存储这些频率值所需的空间也是指数增长的。例如，一个语言里只有 10 个单词，如果要记录一个词的长度为 6 的 context ，如果不考虑语法规则之类的限制，允许单词的各种组合的话，那么就是 10的6次方种情况，在稍微复杂点的情况下，这个量级就难以承受了。 为了避免这种爆炸性的复杂度增长，有人做了一个很大胆的近似方法：抛弃所有的上下文信息。现在一个单词在不同的地方出现，对于这个模型来说都是同等对待了，我们知道 apple 做主语的概率肯定比做宾语的概率要小，我们也知道 look 作为动词和作为名词的情况应该区别对待的，我们有许多许多的理由来否定这个模型，简直太 Naive 了！没错，就是 Naive ，这种方法的名字就是 Naive Bayes ，中文叫做朴素贝叶斯。 朴素贝叶斯直接抛弃所有上下文信息，这样 P(Wn|W1W2…Wn-1)=P(Wn)，因此： 这样，这个模型只需要提供所有单词的概率，那么任意复杂的字符串的概率都可以直接分解计算出来，并且单词的概率也更加容易求得，只需要用训练数据中每个单词出现的次数除以总的单词数目即可，并且不需要太多（相对于考虑上下文的情况）的文档就可以训练出比较精确的模型来。 这就是完整的朴素贝叶斯方法。然而，在很多时候，这样的模型还是太简单了，造成了比较大的 bias ，效果并不好。因此有折衷的方法就是考虑一定长度以内的上下文，例如，仅考虑长度为 1 的上下文，亦即每个单词的前一个单词，那么 另外还有长度为 2 的上下文，这些在 Speech Recognition 以及 Natural Language Processing 里面用得比较多，更长上下文的模型则不那么常见了。对于上下文长度为 2 的模型，我们总是考虑三个连续单词 W1W2W3组成的元组，称作 trigram ，类似的有 unigram 和 bigram ，以及通用的 n-gram 。 最后要说的是，虽然在英文里按照单词的界限是很明显的，但是对于中文来说，一个“词”的划分却要复杂许多，因此构建 n-gram 也有两种不同的方法，通常根据应用的需要可以直接在“字”的基础上构建 n-gram，也可以先分词之后以“词”为基本元素构建 n-gram 。这里生成的 n-gram 用于构建 language model ，其实又可以反过来帮助完成分词的任务，在存在多种可能的划分里选择最佳的一种。对于这样一个句子“研究生命起源”，它可能是字符串“研究 生命 起源”或者“研究生 命 起源”，如果我们有一个 Language Model ，那么只需要计算两个字符串的概率，取概率最大的那一个就可以了。]]></content>
+      <categories>
+        <category>artificial-intelligence</category>
+        <category>NLP</category>
+      </categories>
+      <tags>
+        <tag>deep-learning</tag>
+        <tag>Neural Networks</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[NLP之概率图模型]]></title>
     <url>%2Funcategorized%2FNLP%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B%2F</url>
     <content type="text"><![CDATA[]]></content>
@@ -450,8 +463,8 @@
         <category>machine-learning</category>
       </categories>
       <tags>
-        <tag>machine-learning</tag>
         <tag>algorithm</tag>
+        <tag>machine-learning</tag>
       </tags>
   </entry>
   <entry>
@@ -741,7 +754,7 @@
   <entry>
     <title><![CDATA[markdown语法说明]]></title>
     <url>%2Fcommon%2Fothers%2Fmarkdown%E8%AF%AD%E6%B3%95%E8%AF%B4%E6%98%8E%2F</url>
-    <content type="text"><![CDATA[Markdown 的目标是实现「易读易写」。 可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。 欢迎光临我的博客@(标签帮助文档)[牧云者|帮助|Markdown] 牧云者是我的网名，代表着一种自由与不羁。这是我的个人博客，主要记录： 个人心情 ：记录自己生活中的所思所想； 学习笔记 ：平时学习中有些东西需要回过头来重新看看，之前曾写过一些记录我的博客； 技术前瞻 ：写下工作中对于技术方面的理解与领域。 [TOC] Markdown简介 Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。 —— 维基百科 正如您在阅读的这份文档，它使用简单的符号标识不同的标题，将某些文字标记为粗体或者斜体，创建一个链接或一个脚注[^demo]。下面列举了几个高级功能，更多语法请按Ctrl + /查看帮助。 代码块12345678910@requires_authorizationdef somefunc(param1='', param2=0): '''A docstring''' if param1 &gt; param2: # interesting print 'Greater' return (param2 - param1 + 1) or Noneclass SomeClass: pass&gt;&gt;&gt; message = '''interpreter... prompt''' LaTeX 公式可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式： $$ x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$ 表格 Item Value Qty Computer 1600 USD 5 Phone 12 USD 12 Pipe 1 USD 234 流程图12345678st=&gt;start: Starte=&gt;endop=&gt;operation: My Operationcond=&gt;condition: Yes or No?st-&gt;op-&gt;condcond(yes)-&gt;econd(no)-&gt;op 以及时序图: 123Alice-&gt;Bob: Hello Bob, how are you?Note right of Bob: Bob thinksBob--&gt;Alice: I am good thanks! 提示：想了解更多，请查看流程图语法以及时序图语法。 复选框使用 - [ ] 和 - [x] 语法可以创建复选框，实现 todo-list 等功能。例如： 已完成事项 待办事项1 待办事项2 注意：目前支持尚不完全。 关于超链接超链接格式为：续费。 反馈与建议 微博：@牧云者 邮箱：&#x6d;&#x75;&#x79;&#117;&#x6e;&#x7a;&#104;&#x65;&#x2e;&#x6e;&#117;&#x64;&#116;&#64;&#103;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#111;&#109; [^demo]: 这是一个示例脚注。请查阅 MultiMarkdown 文档 关于脚注的说明。]]></content>
+    <content type="text"><![CDATA[Markdown 的目标是实现「易读易写」。 可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。 欢迎光临我的博客@(标签帮助文档)[牧云者|帮助|Markdown] 牧云者是我的网名，代表着一种自由与不羁。这是我的个人博客，主要记录： 个人心情 ：记录自己生活中的所思所想； 学习笔记 ：平时学习中有些东西需要回过头来重新看看，之前曾写过一些记录我的博客； 技术前瞻 ：写下工作中对于技术方面的理解与领域。 [TOC] Markdown简介 Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。 —— 维基百科 正如您在阅读的这份文档，它使用简单的符号标识不同的标题，将某些文字标记为粗体或者斜体，创建一个链接或一个脚注[^demo]。下面列举了几个高级功能，更多语法请按Ctrl + /查看帮助。 代码块12345678910@requires_authorizationdef somefunc(param1='', param2=0): '''A docstring''' if param1 &gt; param2: # interesting print 'Greater' return (param2 - param1 + 1) or Noneclass SomeClass: pass&gt;&gt;&gt; message = '''interpreter... prompt''' LaTeX 公式可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式： $$ x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$ 表格 Item Value Qty Computer 1600 USD 5 Phone 12 USD 12 Pipe 1 USD 234 流程图12345678st=&gt;start: Starte=&gt;endop=&gt;operation: My Operationcond=&gt;condition: Yes or No?st-&gt;op-&gt;condcond(yes)-&gt;econd(no)-&gt;op 以及时序图: 123Alice-&gt;Bob: Hello Bob, how are you?Note right of Bob: Bob thinksBob--&gt;Alice: I am good thanks! 提示：想了解更多，请查看流程图语法以及时序图语法。 复选框使用 - [ ] 和 - [x] 语法可以创建复选框，实现 todo-list 等功能。例如： 已完成事项 待办事项1 待办事项2 注意：目前支持尚不完全。 关于超链接超链接格式为：续费。 反馈与建议 微博：@牧云者 邮箱：&#x6d;&#117;&#x79;&#117;&#x6e;&#122;&#x68;&#x65;&#46;&#110;&#x75;&#x64;&#x74;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d; [^demo]: 这是一个示例脚注。请查阅 MultiMarkdown 文档 关于脚注的说明。]]></content>
       <categories>
         <category>common</category>
         <category>others</category>
