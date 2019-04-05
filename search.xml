@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Python动态导入]]></title>
+    <url>%2Ftechnology%2Fprogramming%2FPython%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5%2F</url>
+    <content type="text"><![CDATA[python中的动态导入，也就是动态的导入模块，主要用于反射或者延迟加载模块。__import__(module)相当于import module，如果一个模块经常变化就可以使用 __import__(module) 来动态载入。 动态导入的两种方法一，使用系统函数__import__() __import__(name[, globals[, locals[, fromlist[, level]]]]) 参数说明： name – 模块名 具体例子如下： name = ‘requests’aa = __import__(name)r= aa.get(‘http://www.baidu.com&#39;)print(r.content) 二，使用importlib，具体例子如下： import importlibname=”requests”aa=importlib.import_module(name)res = aa.get(‘http://www.baidu.com&#39;)print(res.content) 导入package对应的模块__import__(package.module)相当于from package import name，如果fromlist不传入值，则返回package对应的模块，如果fromlist传入值，则返回package.module对应的模块。 和import的区别import作用:导入/引入一个python标准模块，其中包括.py文件、带有init.py文件的目录； __import__作用:同import语句同样的功能，但__import__是一个函数，并且只接收字符串作为参数，所以它的作用就可想而知了。其实import语句就是调用这个函数进行导入工作的，import sys = __import__(‘sys’)。]]></content>
+      <categories>
+        <category>technology</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>programming</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[算法工程师面试题目]]></title>
+    <url>%2Fartificial-intelligence%2Falgorithm%2F%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E9%9D%A2%E8%AF%95%E9%A2%98%E7%9B%AE%2F</url>
+    <content type="text"><![CDATA[这里汇总下算法工程师必知必会的一些基本技能，也是算法工程师在面试过程中会经常被问到的一些问题，都是比较常见的理论基础，不涉及特别前沿的学术问题，有在找工作的同学们可以参考，这里没附上答案，如果有兴趣大家可以自己去搜索。 机器学习 1.几种模型（ SVM，LR，GBDT，EM ）的原理以及公式推导； 2.决策树处理连续值的方法； 3.特征选择的方法； 4.过拟合原因以及解决办法 5.K-means 的原理，优缺点以及改进； 6.SVM 为啥要引入拉格朗日的优化方法；SVM中用到了哪些内核？SVM的优化技术有哪些？ 7.梯度下降的优缺点 8.EM与K-means的关系； 9.L1与L2的作用，区别以及如何解决L1求导困难； 10.ID3和C4.5的优缺点，树的融合(RF和GBDT) 11.特征提取方法，如何判断特征是否重要 12.常见损失函数 13.机器学习性能评价，准确率，召回率,ROC 14.降采样，PCA，LDA 15.RF,gbdt，XgBoost的区别，残差是什么 16.什么是偏差与方差？导致偏差和方差的原因 17.生成模型与判别模型的区别，分别举例 18.先验概率与后验概率，贝叶斯公式 19.超参数怎么选择 20.余弦相似度与欧氏距离的区别与联系 21.混淆矩阵、模型度量指标：准确率、精确率、召回率、F1 值等 22.如何处理数据中的缺失值 23.介绍一个完整的机器学习项目流程 24.数据清洗与特征处理 25.基尼指数的计算公式、熵的计算公式 26.样本不均衡问题 GBDT单独考点 怎样设置单棵树的停止生长条件？ 如何评估特征的权重大小？ 树生长成畸形树，会带来哪些危害，如何预防？ 当增加样本数量时，训练时长是线性增加吗？ 当增加树的棵树时，训练时长是线性增加吗？ 当增加一个棵树叶子节点数目时，训练时长是线性增加吗？ 每个节点上都保存什么信息？ 如何防止过拟合？ gbdt在训练和预测的时候都用到了步长，这两个步长一样么？都有什么用，如果不一样，为什么？怎么设步长的大小？（太小？太大？）在预测时，设太大对排序结果有什么影响？跟shrinking里面的步长一样么？ boosting的本意是是什么？跟bagging，random forest，adaboost，gradient boosting有什么区别？ gbdt中哪些部分可以并行？该部分答案见：https://blog.csdn.net/u014465639/article/details/73912614 深度学习1.梯度消失和梯度爆炸的原因，为什么rnn比cnn和全连接层神经网络更容易发生梯度消失或爆炸2.怎么判断过拟合，怎么防止过拟合，说一下dropout3.LSTM相比于传统RNN解决了什么问题？怎么解决的？4.Attention模型和CNN 的区别？5.详细解释 CNN 的原理；6.BP神经网络以及推导7.四种激活函数区别和作用8.优化算法 adam，SGD等9.TensorFlow中的session是什么10.参数初始化方法11.数据预处理12.训练技巧13.深度学习为什么不用二阶优化14.batch size大小会怎么影响收敛速度15.gan的loss是什么16.loss的几种方法 NLP Attention机制的原理，里面的q,k,v分别代表什么 Fasttext原理，Fasttext怎么做分类的，相比于word2vec有什么优势，cbow和skipgram的区别，分层softmax和負采样，負采样的采样原理，为什么要这样采样，Fasttext哈希规则，怎么把语义相近的词哈希到一个桶里。 文本分类除了CNN和RNN还知道哪些方法？ BILSTM + CRF模型的原理 隐马尔可夫模型了解吗，和CRF的区别 摘要抽取怎么做的 CRF模型说一下，优化目标是什么，怎么训练的？CRF和HMM的区别，从有向无向图的角度呢？从其他角度呢？。CRF和深度学习的结合还知道哪些？ CRF和HMM的区别 HMM做了哪些独立性假设，有向图模型和无向图模型分别作了哪些假设？ HMM的训练方法,HMM模型状态推导 CRF的训练目标是什么？CRF的预测方法，维特比算法的过程，维特比算法的时间复杂度 画Transformer的结构图，讲一下原理，transformer中句子的encoder表示是什么，怎么加入词序信息的，为什么self-attention可以替代seq2seq 讲一下Textcnn的运算过程 文本分类的评价指标 LDA的词表示和word2vec的词表示有什么区别； 文本分类CNN，LSTM和Attention的区别 讲一下tag提取怎么做的，讲一下LDA，讲一下隐狄利克雷分布，里面有个辛普森采样了解吗 TF-IDF原理、公式、缺点、改进 word2vec与LDA区别 seq2seq 大数据 假如有10亿条搜索请求，怎么找出最热的前10条？ 代码题一个圆被分成M个扇形，一共有N种颜色，相邻扇形不同色，一共有几种涂法？1/x的导数是多少log(x+10)的曲线数组中最长连续序列、最长递增子序列最长公共子串、最长公共子序列整数的二进制表示中有多少个1从其他数都出现偶数次的数组中找出出现奇数次的数：异或数组排序后相邻数的最大差值n行列都排好序的矩阵中找一个数只用2g内存 20亿个整数32位中寻找出现次数最多的数判断数组中是否所有的字符都只出现了一次：空间on或者空间o1字符串翻转判断二叉树是否是平衡二叉树编程判断俩个链表是否相交翻转句子中单词的顺序题目：输入一个已经按升序排序过的数组和一个数字，在数组中查找两个数，使得它们的和正好是输入的那个数字。要求时间复杂度是O(n)。如果有多对数字的和等于输入的数字，输出任意一对即可。例如输入数组1、2、4、7、11、15和数字15。由于4+11=15，因此输出4和11。一个台阶总共有n级，如果一次可以跳1级，也可以跳2级。求总共有多少总跳法，并分析算法的时间复杂度输入一个正整数数组，将它们连接起来排成一个数，输出能排出的所有数字中最小的一个。例如输入数组{32, 321}，则输出这两个能排成的最小数字32132。数组中超过出现次数超过一半的数字判断一字符串是不是对称的，如：abccba用递归的方法判断整数组a[N]是不是升序排列 python yield关键字的作用 什么是元类（metaclass） Python中有三目运算符吗 如何检查一个文件是否存在 if name == “main”: 这句话做了什么事情 在Python中调用外部命令 如何用一行代码合并2个字典 如何创建一个不存在的目录 如何根据值对字典排序 Python中有判断字符串包含(contains)子串的方法吗？ 如何列出一个文件夹下的所有文件 如何检查列表是否为空 list方法append()与extend()的区别 Python中@staticmethod与@classmethod的区别 如何访问for循环中的下标 如何在函数中使用全局变量 如何创建连续调用的函数装饰器 理解python的切片符号 Python中如何在列表中找到某个元素的下标 字典如何判断键已存在 讲讲python的垃圾回收机制，讲讲装饰器 使用’for’循环迭代字典 str 和 repr的区别 Python中如何展开嵌套列表 最小经验原则（POLA）与可变默认参数 如何按引用传值]]></content>
+      <categories>
+        <category>artificial-intelligence</category>
+        <category>algorithm</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[NLP之语言模型]]></title>
     <url>%2Fartificial-intelligence%2FNLP%2FNLP%E4%B9%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%2F</url>
     <content type="text"><![CDATA[语言模型（Language Model），是用来计算一个句子出现概率的模型，即P(W1,W2,…Wk)。利用语言模型，可以确定哪个词序列的可能性更大，或者给定若干个词，可以预测下一个最可能出现的词语。 语言模型简介​ 假设有一个符号的集合 {W}，我们不妨把每一个 符号Wi称作一个“单词”，由零个或多个单词连接起来就组成了一个字符串 S=w1w2…wn，字符串可长可短，例如实际语言中的句子、段落或者文档都可以看作一个字符串。所有合法（例如，通过一些语法约束）的字符串的集合称作一个语言，而一个语言模型就是这个语言里的字符串的概率分布模型。 ​ 然而，Language Model实际上是非常通用的，任意由一些基本单元组成的序列都可以使用Language Model来分析，比如语音识别里面，基本单元就是音频信号，序列就是一句话。 算法一个 Language Model 要给出一个字符串的概率：P(S)=P(W1W2…Wn)，了解一点概率论知识的人应该都知道这个式子可以像这样分解： 例如，对于字符串 He eats apple ，我们有 P([He][eats][apple]) = P([He])P([eats]|[He])P([apple]|[He][eats]) ，其中 P([apple]|[He][eats]) 里 [He][eats] 是 [apple] 的上下文（也许称“上文”在这里更加形象一些），同一个单词，在不同的上下文中出现的概率实际上是不一样的，特别是在一个字符串中越靠后的词，它将有越“长”的上下文 。 在构造模型的时候，我们可以通过统计训练数据里各个单词（在各个 context 之下）出现的频率来近似逼近它的概率，那么，本身随着 context 长度的增长，所有可能的情况也会爆炸性地增长，训练数据不可能覆盖所有，更严重的是，要存储这些频率值所需的空间也是指数增长的。例如，一个语言里只有 10 个单词，如果要记录一个词的长度为 6 的 context ，如果不考虑语法规则之类的限制，允许单词的各种组合的话，那么就是 10的6次方种情况，在稍微复杂点的情况下，这个量级就难以承受了。 为了避免这种爆炸性的复杂度增长，有人做了一个很大胆的近似方法：抛弃所有的上下文信息。现在一个单词在不同的地方出现，对于这个模型来说都是同等对待了，我们知道 apple 做主语的概率肯定比做宾语的概率要小，我们也知道 look 作为动词和作为名词的情况应该区别对待的，我们有许多许多的理由来否定这个模型，简直太 Naive 了！没错，就是 Naive ，这种方法的名字就是 Naive Bayes ，中文叫做朴素贝叶斯。 朴素贝叶斯直接抛弃所有上下文信息，这样 P(Wn|W1W2…Wn-1)=P(Wn)，因此： 这样，这个模型只需要提供所有单词的概率，那么任意复杂的字符串的概率都可以直接分解计算出来，并且单词的概率也更加容易求得，只需要用训练数据中每个单词出现的次数除以总的单词数目即可，并且不需要太多（相对于考虑上下文的情况）的文档就可以训练出比较精确的模型来。 这就是完整的朴素贝叶斯方法。然而，在很多时候，这样的模型还是太简单了，造成了比较大的 bias ，效果并不好。因此有折衷的方法就是考虑一定长度以内的上下文，例如，仅考虑长度为 1 的上下文，亦即每个单词的前一个单词，那么 另外还有长度为 2 的上下文，这些在 Speech Recognition 以及 Natural Language Processing 里面用得比较多，更长上下文的模型则不那么常见了。对于上下文长度为 2 的模型，我们总是考虑三个连续单词 W1W2W3组成的元组，称作 trigram ，类似的有 unigram 和 bigram ，以及通用的 n-gram 。 最后要说的是，虽然在英文里按照单词的界限是很明显的，但是对于中文来说，一个“词”的划分却要复杂许多，因此构建 n-gram 也有两种不同的方法，通常根据应用的需要可以直接在“字”的基础上构建 n-gram，也可以先分词之后以“词”为基本元素构建 n-gram 。这里生成的 n-gram 用于构建 language model ，其实又可以反过来帮助完成分词的任务，在存在多种可能的划分里选择最佳的一种。对于这样一个句子“研究生命起源”，它可能是字符串“研究 生命 起源”或者“研究生 命 起源”，如果我们有一个 Language Model ，那么只需要计算两个字符串的概率，取概率最大的那一个就可以了。]]></content>
@@ -9,8 +34,7 @@
         <category>NLP</category>
       </categories>
       <tags>
-        <tag>deep-learning</tag>
-        <tag>Neural Networks</tag>
+        <tag>NLP</tag>
       </tags>
   </entry>
   <entry>
@@ -463,8 +487,8 @@
         <category>machine-learning</category>
       </categories>
       <tags>
-        <tag>algorithm</tag>
         <tag>machine-learning</tag>
+        <tag>algorithm</tag>
       </tags>
   </entry>
   <entry>
@@ -754,7 +778,7 @@
   <entry>
     <title><![CDATA[markdown语法说明]]></title>
     <url>%2Fcommon%2Fothers%2Fmarkdown%E8%AF%AD%E6%B3%95%E8%AF%B4%E6%98%8E%2F</url>
-    <content type="text"><![CDATA[Markdown 的目标是实现「易读易写」。 可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。 欢迎光临我的博客@(标签帮助文档)[牧云者|帮助|Markdown] 牧云者是我的网名，代表着一种自由与不羁。这是我的个人博客，主要记录： 个人心情 ：记录自己生活中的所思所想； 学习笔记 ：平时学习中有些东西需要回过头来重新看看，之前曾写过一些记录我的博客； 技术前瞻 ：写下工作中对于技术方面的理解与领域。 [TOC] Markdown简介 Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。 —— 维基百科 正如您在阅读的这份文档，它使用简单的符号标识不同的标题，将某些文字标记为粗体或者斜体，创建一个链接或一个脚注[^demo]。下面列举了几个高级功能，更多语法请按Ctrl + /查看帮助。 代码块12345678910@requires_authorizationdef somefunc(param1='', param2=0): '''A docstring''' if param1 &gt; param2: # interesting print 'Greater' return (param2 - param1 + 1) or Noneclass SomeClass: pass&gt;&gt;&gt; message = '''interpreter... prompt''' LaTeX 公式可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式： $$ x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$ 表格 Item Value Qty Computer 1600 USD 5 Phone 12 USD 12 Pipe 1 USD 234 流程图12345678st=&gt;start: Starte=&gt;endop=&gt;operation: My Operationcond=&gt;condition: Yes or No?st-&gt;op-&gt;condcond(yes)-&gt;econd(no)-&gt;op 以及时序图: 123Alice-&gt;Bob: Hello Bob, how are you?Note right of Bob: Bob thinksBob--&gt;Alice: I am good thanks! 提示：想了解更多，请查看流程图语法以及时序图语法。 复选框使用 - [ ] 和 - [x] 语法可以创建复选框，实现 todo-list 等功能。例如： 已完成事项 待办事项1 待办事项2 注意：目前支持尚不完全。 关于超链接超链接格式为：续费。 反馈与建议 微博：@牧云者 邮箱：&#x6d;&#x75;&#121;&#117;&#x6e;&#x7a;&#x68;&#x65;&#x2e;&#110;&#117;&#x64;&#116;&#64;&#103;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#111;&#109; [^demo]: 这是一个示例脚注。请查阅 MultiMarkdown 文档 关于脚注的说明。]]></content>
+    <content type="text"><![CDATA[Markdown 的目标是实现「易读易写」。 可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。 欢迎光临我的博客@(标签帮助文档)[牧云者|帮助|Markdown] 牧云者是我的网名，代表着一种自由与不羁。这是我的个人博客，主要记录： 个人心情 ：记录自己生活中的所思所想； 学习笔记 ：平时学习中有些东西需要回过头来重新看看，之前曾写过一些记录我的博客； 技术前瞻 ：写下工作中对于技术方面的理解与领域。 [TOC] Markdown简介 Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。 —— 维基百科 正如您在阅读的这份文档，它使用简单的符号标识不同的标题，将某些文字标记为粗体或者斜体，创建一个链接或一个脚注[^demo]。下面列举了几个高级功能，更多语法请按Ctrl + /查看帮助。 代码块12345678910@requires_authorizationdef somefunc(param1='', param2=0): '''A docstring''' if param1 &gt; param2: # interesting print 'Greater' return (param2 - param1 + 1) or Noneclass SomeClass: pass&gt;&gt;&gt; message = '''interpreter... prompt''' LaTeX 公式可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式： $$ x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$ 表格 Item Value Qty Computer 1600 USD 5 Phone 12 USD 12 Pipe 1 USD 234 流程图12345678st=&gt;start: Starte=&gt;endop=&gt;operation: My Operationcond=&gt;condition: Yes or No?st-&gt;op-&gt;condcond(yes)-&gt;econd(no)-&gt;op 以及时序图: 123Alice-&gt;Bob: Hello Bob, how are you?Note right of Bob: Bob thinksBob--&gt;Alice: I am good thanks! 提示：想了解更多，请查看流程图语法以及时序图语法。 复选框使用 - [ ] 和 - [x] 语法可以创建复选框，实现 todo-list 等功能。例如： 已完成事项 待办事项1 待办事项2 注意：目前支持尚不完全。 关于超链接超链接格式为：续费。 反馈与建议 微博：@牧云者 邮箱：&#x6d;&#x75;&#x79;&#117;&#110;&#x7a;&#104;&#101;&#46;&#x6e;&#x75;&#100;&#116;&#x40;&#x67;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#109; [^demo]: 这是一个示例脚注。请查阅 MultiMarkdown 文档 关于脚注的说明。]]></content>
       <categories>
         <category>common</category>
         <category>others</category>
