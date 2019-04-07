@@ -113,7 +113,7 @@
 <meta property="og:image" content="http://muyunzhe.com/artificial-intelligence/NLP/中文分词算法简析/LSTM-CRF.jpg">
 <meta property="og:image" content="http://muyunzhe.com/artificial-intelligence/NLP/中文分词算法简析/LSTM_CNN_CRF_1.jpg">
 <meta property="og:image" content="http://muyunzhe.com/artificial-intelligence/NLP/中文分词算法简析/LSTM_CNN_CRF_2.jpg">
-<meta property="og:updated_time" content="2019-04-07T14:51:09.000Z">
+<meta property="og:updated_time" content="2019-04-07T15:00:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="中文分词算法简析">
 <meta name="twitter:description" content="与大部分西方语言不同，中文在词与词之间没有明显的空格标记，句子是以字串的形式出现。中文字符在语义识别时，需要把数个字符组合成词，才能表达出真正的含义，因此，中文分词是很多自然语言处理系统中的基础模块和首要环节。">
@@ -444,7 +444,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-04-07 22:51:09" itemprop="dateModified" datetime="2019-04-07T22:51:09+08:00">2019-04-07</time>
+                <time title="修改时间：2019-04-07 23:00:41" itemprop="dateModified" datetime="2019-04-07T23:00:41+08:00">2019-04-07</time>
               
             
           </span>
@@ -529,14 +529,15 @@
 <p>字符串匹配算法以及其改进方案是基于词典和规则的。其优点是实现简单，算法运行速度快，缺点是严重依赖词典，无法很好的处理分词歧义和未登录词。</p>
 <p>二、基于统计的分词</p>
 <p>1）基于N-gram语言模型的分词方法</p>
-<p>N-gram语言模型分词方法则是利用统计信息找出一条概率最大的路径。假设随机变量<em>S</em>为一个汉字序列，<em>W</em>是<em>S</em>上所有可能的切分路径。对于分词，实际上就是求解使条件概率<em>P</em>(<em>W</em>∣<em>S</em>)最大的切分路径<em>W</em>∗，即$$W^{<em>}=\arg \max _{W} P(W | S)$$，根据贝叶斯公式，$$W^{</em>}=\arg \max _{W} \frac{P(W) P(S | W)}{P(S)}$$，由于<em>P</em>(<em>S</em>)为归一化因子，<em>P</em>(<em>S</em>∣<em>W</em>)恒为1，因此只需要求解<em>P</em>(<em>W</em>)。<em>P</em>(<em>W</em>)使用N-gram语言模型建模，定义如下(以Bi-gram为例)：</p>
-<p>$$P(W)=P\left(w_{1} w_{2} \cdots w_{T}\right)=P\left(w_{1}\right) <em> P\left(w_{2} | w_{1}\right) \cdots </em> P\left(w_{T} | w_{T-1}\right)=\prod_{t=1}^{T} \widehat{P}\left(w_{t} | w_{1}^{t-1}\right)$$</p>
-<p>至此，各切分路径的好坏程度(条件概率<em>P</em>(<em>W</em>∣<em>S</em>))可以求解。简单的，可以根据DAG（全切分有向无环图(）枚举全路径，暴力求解最优路径；也可以使用动态规划的方法求解，<a href="https://github.com/fxsjy/jieba" target="_blank" rel="noopener">jieba</a>中不带HMM新词发现的分词，就是DAG + Uni-gram的语言模型 + 后向DP的方式进行的。</p>
+<p>N-gram语言模型分词方法则是利用统计信息找出一条概率最大的路径。假设随机变量<em>S</em>为一个汉字序列，<em>W</em>是<em>S</em>上所有可能的切分路径。对于分词，实际上就是求解使条件概率<em>P</em>(<em>W</em>∣<em>S</em>)最大的切分路径<em>W</em>∗，即<script type="math/tex">W^{*}=\arg \max _{W} P(W | S)</script>，根据贝叶斯公式，<script type="math/tex">W^{*}=\arg \max _{W} \frac{P(W) P(S | W)}{P(S)}</script>，由于<em>P</em>(<em>S</em>)为归一化因子，<em>P</em>(<em>S</em>∣<em>W</em>)恒为1，因此只需要求解<em>P</em>(<em>W</em>)。<em>P</em>(<em>W</em>)使用N-gram语言模型建模，定义如下(以Bi-gram为例)：</p>
+<script type="math/tex; mode=display">P(W)=P\left(w_{1} w_{2} \cdots w_{T}\right)=P\left(w_{1}\right) * P\left(w_{2} | w_{1}\right) \cdots * P\left(w_{T} | w_{T-1}\right)=\prod_{t=1}^{T} \widehat{P}\left(w_{t} | w_{1}^{t-1}\right)</script><p>至此，各切分路径的好坏程度(条件概率<em>P</em>(<em>W</em>∣<em>S</em>))可以求解。简单的，可以根据DAG（全切分有向无环图(）枚举全路径，暴力求解最优路径；也可以使用动态规划的方法求解，<a href="https://github.com/fxsjy/jieba" target="_blank" rel="noopener">jieba</a>中不带HMM新词发现的分词，就是DAG + Uni-gram的语言模型 + 后向DP的方式进行的。</p>
 <p>接下来介绍的几种分词方法都属于由字构词的分词方法，由字构词的分词方法思想并不复杂，它是将分词问题转化为字的分类问题（序列标注问题）。从某些层面讲，由字构词的方法并不依赖于事先编制好的词表，但仍然需要分好词的训练语料。</p>
 <p>规定每个字有4个词位：词首 B、词中 M、词尾 E、单字成词 S</p>
 <p>2）HMM（HiddenMarkov Model）</p>
 <p>隐马尔科夫模型（HMM）应用非常广泛，基本的思想就是根据观测值序列找到真正的隐藏状态值序列。在中文分词中，一段文字的每个字符可以看作是一个观测值，而这个字符的词位置label（BEMS）可以看作是隐藏的状态。使用HMM的分词，通过对切分语料库进行统计，可以得到模型中5大要要素：起始概率矩阵，转移概率矩阵，发射概率矩阵，观察值集合，状态值集合。有了三个矩阵和两个集合后，HMM问题最终转化成求解隐藏状态序列最大值的问题，求解这个问题最长使用的是Viterbi算法。</p>
-<p>HMM是一个生成式模型，X为观测序列，Y为隐序列。<br>$$<br>P(X, Y)=\prod_{t=1}^{T} P\left(y_{t} | y_{t-1}\right) * P\left(x_{t} | y_{t}\right)<br>$$<br><img src="/artificial-intelligence/NLP/中文分词算法简析/hmm.jpg" alt></p>
+<p>HMM是一个生成式模型，X为观测序列，Y为隐序列。</p>
+<script type="math/tex; mode=display">
+P(X, Y)=\prod_{t=1}^{T} P\left(y_{t} | y_{t-1}\right) * P\left(x_{t} | y_{t}\right)</script><p><img src="/artificial-intelligence/NLP/中文分词算法简析/hmm.jpg" alt></p>
 <p>熟悉HMM的同学都知道，HMM有三类基本问题：</p>
 <ul>
 <li>预测(filter)：已知模型参数和某一特定输出序列，求最后时刻各个隐含状态的概率分布，即求 <em>P</em>(<em>x</em>(<em>t</em>) ∣ <em>y</em>(1),⋯,<em>y</em>(<em>t</em>))。通常使用前向算法解决.</li>
@@ -550,7 +551,9 @@
 <p>最大熵马尔可夫模型（MEMM）把HMM模型和maximum-entropy模型的优点集合程一个产生式模型，这个模型允许状态转移概率依赖于序列中彼此之间非独立的特征上，从而将上下文信息引入到模型的学习和识别过程中，提高了识别的精确度，召回率也大大的提高</p>
 <p>4）CRF（Conditionalrandom field）</p>
 <p>条件随机场（CRF）是用来标注和划分结构数据的概率化结构模型。和HMM不同的是，当对于给定的输入观测序列X和输出序列Y，CRF通过定义条件概率P(Y|X)，而不是联合概率分布P(X，Y)来描述模型。运用在分词中的基本思路是对汉字进行标注即由字构词（组词），不仅考虑了文字词语出现的频率信息，同时考虑上下文语境，具备较好的学习能力，因此对歧义词和未登录词的识别都具有良好的效果。其不足之处是训练周期较长，运营时计算量较大，性能不如词典统计分词。</p>
-<p>简单来说，分词所使用的是Linear-CRF，它由一组特征函数组成，包括权重<em>λ</em>和特征函数<em>f</em>，特征函数<em>f</em>的输入是整个句子<em>s</em>、当前pos<em>i</em>、前一个词位<em>li</em>−1，当前词位<em>li</em>。<br>$$<br>s c o r e(l | s)=\sum_{j=1}^{m} \sum_{i=1}^{n} \lambda_{j} f_{j}\left(s, i, l_{i}, l_{i-1}\right)<br>$$<br><img src="/artificial-intelligence/NLP/中文分词算法简析/CRF.jpg" alt></p>
+<p>简单来说，分词所使用的是Linear-CRF，它由一组特征函数组成，包括权重<em>λ</em>和特征函数<em>f</em>，特征函数<em>f</em>的输入是整个句子<em>s</em>、当前pos<em>i</em>、前一个词位<em>li</em>−1，当前词位<em>li</em>。</p>
+<script type="math/tex; mode=display">
+s c o r e(l | s)=\sum_{j=1}^{m} \sum_{i=1}^{n} \lambda_{j} f_{j}\left(s, i, l_{i}, l_{i-1}\right)</script><p><img src="/artificial-intelligence/NLP/中文分词算法简析/CRF.jpg" alt></p>
 <blockquote>
 <p>到底什么是特征函数？</p>
 <p>以CRF在词性标注上的应用，给大家一个特征函数的感性认识。</p>
@@ -1440,6 +1443,46 @@
   
   
 
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
   
 
 

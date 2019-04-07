@@ -508,11 +508,11 @@
  <a id="more"></a>
 <h3 id="动态导入的两种方法"><a href="#动态导入的两种方法" class="headerlink" title="动态导入的两种方法"></a>动态导入的两种方法</h3><p>一，使用系统函数__import__()</p>
 <p>__import__(name[, globals[, locals[, fromlist[, level]]]])</p>
-<p><strong>参数说明：</strong> name – 模块名</p>
+<p><strong>参数说明：</strong> name — 模块名</p>
 <p>具体例子如下：</p>
-<p>name = ‘requests’<br>aa = __import__(name)<br>r= aa.get(‘<a href="http://www.baidu.com&#39;" target="_blank" rel="noopener">http://www.baidu.com&#39;</a>)<br>print(r.content)</p>
+<p>name = ‘requests’<br>aa = __import__(name)<br>r= aa.get(‘<a href="http://www.baidu.com" target="_blank" rel="noopener">http://www.baidu.com</a>‘)<br>print(r.content)</p>
 <p>二，使用importlib，具体例子如下：</p>
-<p>import importlib<br>name=”requests”<br>aa=importlib.import_module(name)<br>res = aa.get(‘<a href="http://www.baidu.com&#39;" target="_blank" rel="noopener">http://www.baidu.com&#39;</a>)<br>print(res.content)</p>
+<p>import importlib<br>name=”requests”<br>aa=importlib.import_module(name)<br>res = aa.get(‘<a href="http://www.baidu.com" target="_blank" rel="noopener">http://www.baidu.com</a>‘)<br>print(res.content)</p>
 <h3 id="导入package对应的模块"><a href="#导入package对应的模块" class="headerlink" title="导入package对应的模块"></a>导入package对应的模块</h3><p>__import__(package.module)相当于from package import name，如果fromlist不传入值，则返回package对应的模块，如果fromlist传入值，则返回package.module对应的模块。</p>
 <h3 id="和import的区别"><a href="#和import的区别" class="headerlink" title="和import的区别"></a>和import的区别</h3><p>import作用:<br>导入/引入一个python标准模块，其中包括.py文件、带有<strong>init</strong>.py文件的目录；</p>
 <p>__import__作用:<br>同import语句同样的功能，但__import__是一个函数，并且只接收字符串作为参数，所以它的作用就可想而知了。其实import语句就是调用这个函数进行导入工作的，import sys  = __import__(‘sys’)。</p>

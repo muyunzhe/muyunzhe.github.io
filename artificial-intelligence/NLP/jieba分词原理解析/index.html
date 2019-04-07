@@ -108,7 +108,7 @@
 <meta property="og:site_name" content="牧云者">
 <meta property="og:description" content="jieba分词算法使用了基于前缀词典实现高效的词图扫描，生成句子中汉字所有可能生成词情况所构成的有向无环图(DAG), 再采用了动态规划查找最大概率路径，找出基于词频的最大切分组合，对于未登录词，采用了基于汉字成词能力的HMM模型，使用了Viterbi算法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-07T14:51:27.000Z">
+<meta property="og:updated_time" content="2019-04-07T14:58:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jieba分词原理解析">
 <meta name="twitter:description" content="jieba分词算法使用了基于前缀词典实现高效的词图扫描，生成句子中汉字所有可能生成词情况所构成的有向无环图(DAG), 再采用了动态规划查找最大概率路径，找出基于词频的最大切分组合，对于未登录词，采用了基于汉字成词能力的HMM模型，使用了Viterbi算法。">
@@ -421,7 +421,7 @@
                 
               
 
-              <time title="创建时间：2019-04-07 16:51:01 / 修改时间：22:51:27" itemprop="dateCreated datePublished" datetime="2019-04-07T16:51:01+08:00">2019-04-07</time>
+              <time title="创建时间：2019-04-07 16:51:01 / 修改时间：22:58:17" itemprop="dateCreated datePublished" datetime="2019-04-07T16:51:01+08:00">2019-04-07</time>
             
 
             
@@ -495,8 +495,7 @@
         <p>jieba分词算法使用了基于前缀词典实现高效的词图扫描，生成句子中汉字所有可能生成词情况所构成的有向无环图(DAG), 再采用了动态规划查找最大概率路径，找出基于词频的最大切分组合，对于未登录词，采用了基于汉字成词能力的HMM模型，使用了Viterbi算法。</p>
  <a id="more"></a>
 <p>jieba分词主要是基于统计词典，构造一个前缀词典；然后利用前缀词典对输入句子进行切分，得到所有的切分可能，根据切分位置，构造一个有向无环图；通过动态规划算法，计算得到最大概率路径，也就得到了最终的切分形式。</p>
-<p>一、中文分词</p>
-<p>采用jieba进行中文分词主要有两种方法，分别是：</p>
+<h3 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h3><p>采用jieba进行中文分词主要有两种方法，分别是：</p>
 <p><strong>jieba.cut</strong> 方法接受三个输入参数:</p>
 <ul>
 <li>需要分词的字符串</li>
@@ -525,8 +524,7 @@
 <li>用 add_word(word, freq=None, tag=None) 和 del_word(word) 在程序中动态修改词典</li>
 <li>用 suggest_freq(segment, tune=True) 可调节单个词语的词频，使其能（或不能）被分出来。</li>
 </ul>
-<p>二、关键词提取</p>
-<p><strong>基于TF-IDF的关键词抽取</strong></p>
+<h3 id="关键词提取"><a href="#关键词提取" class="headerlink" title="关键词提取"></a>关键词提取</h3><p><strong>基于TF-IDF的关键词抽取</strong></p>
 <p>import jieba.analyse</p>
 <ul>
 <li>jieba.analyse.extract_tags(sentence, topK=20, withWeight=False, allowPOS=())<ul>
@@ -550,17 +548,13 @@
 <li>计算图中节点的PageRank，注意是无向带权图</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba.analyse <span class="keyword">as</span> analyse</span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"></span><br><span class="line">lines_NBA = codecs.open(<span class="string">'NBA.txt'</span>,encoding=<span class="string">'utf-8'</span>).read()</span><br><span class="line">print(<span class="string">"  "</span>.join(analyse.textrank(lines_NBA, topK=<span class="number">20</span>, withWeight=<span class="literal">False</span>, allowPOS=(<span class="string">'ns'</span>, <span class="string">'n'</span>, <span class="string">'vn'</span>,<span class="string">'v'</span>))))</span><br></pre></td></tr></table></figure>
-<p>三、词性标注</p>
-<p>jieba.posseg.POSTokenizer(tokenizer=None) 新建自定义分词器，tokenizer 参数可指定内部使用的 jieba.Tokenizer 分词器。jieba.posseg.dt 为默认词性标注分词器。</p>
+<h3 id="词性标注"><a href="#词性标注" class="headerlink" title="词性标注"></a>词性标注</h3><p>jieba.posseg.POSTokenizer(tokenizer=None) 新建自定义分词器，tokenizer 参数可指定内部使用的 jieba.Tokenizer 分词器。jieba.posseg.dt 为默认词性标注分词器。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba.posseg <span class="keyword">as</span> pseg</span><br><span class="line">words = pseg.cut(<span class="string">"我爱自然语言处理"</span>)</span><br><span class="line"><span class="keyword">for</span> word, flag <span class="keyword">in</span> words:</span><br><span class="line">    print(<span class="string">'%s %s'</span> % (word, flag))</span><br></pre></td></tr></table></figure>
-<p>四、并行分词</p>
-<p>其原理是将目标文本按行分隔后，把各行文本分配到多个 Python 进程并行分词，最终归并结果，从而获得分词速度的大幅提升，本功能是基于 python 自带的 multiprocessing 模块，目前暂不支持 Windows。</p>
+<h3 id="并行分词"><a href="#并行分词" class="headerlink" title="并行分词"></a>并行分词</h3><p>其原理是将目标文本按行分隔后，把各行文本分配到多个 Python 进程并行分词，最终归并结果，从而获得分词速度的大幅提升，本功能是基于 python 自带的 multiprocessing 模块，目前暂不支持 Windows。</p>
 <p>用法如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jieba.enable_parallel(<span class="number">4</span>) <span class="comment"># 开启并行分词模式，参数为并行进程数</span></span><br><span class="line">jieba.disable_parallel() <span class="comment"># 关闭并行分词模式</span></span><br></pre></td></tr></table></figure>
-<p>五、命令行分词</p>
-<p>使用方法：python -m jieba news.txt &gt; cut_result.txt</p>
-<p>六、延迟加载机制</p>
-<p>jieba 采用延迟加载，<code>import jieba</code> 和 <code>jieba.Tokenizer()</code> 不会立即触发词典的加载，一旦有必要才开始加载词典构建前缀字典。如果你想手工初始 jieba，也可以手动初始化。用jieba.initialize() </p>
+<h3 id="命令行分词"><a href="#命令行分词" class="headerlink" title="命令行分词"></a>命令行分词</h3><p>使用方法：python -m jieba news.txt &gt; cut_result.txt</p>
+<h3 id="延迟加载机制"><a href="#延迟加载机制" class="headerlink" title="延迟加载机制"></a>延迟加载机制</h3><p>jieba 采用延迟加载，<code>import jieba</code> 和 <code>jieba.Tokenizer()</code> 不会立即触发词典的加载，一旦有必要才开始加载词典构建前缀字典。如果你想手工初始 jieba，也可以手动初始化。用jieba.initialize() </p>
 <h3 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h3><ul>
 <li><p>基于前缀词典（Trie树）实现高效的词图扫描，生成句子中汉字所有可能成词情况所构成的有向无环图 (DAG)</p>
 <p>结巴分词自带了一个叫做dict.txt的词典, 里面有2万多条词, 包含了词条出现的次数和词性. trie树结构的词图扫描, 说的就是把这2万多条词语, 放到一个trie树中,而trie树是有名的前缀树, 也就是说一个词语的前面几个字一样, 就表示他们具有相同的前缀, 就可以使用trie树来存储, 具有查找速度快的优势。具体方法呢就是1. 根据dict.txt生成trie树；2, 对待分词句子, 根据dict.txt生成的trie树, 生成DAG, 实际上通俗的说, 就是对待分词句子, 根据给定的词典进行查词典操作, 生成几种可能的句子切分.</p>
@@ -901,7 +895,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#算法解析"><span class="nav-number">1.</span> <span class="nav-text">算法解析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#中文分词"><span class="nav-number">1.</span> <span class="nav-text">中文分词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键词提取"><span class="nav-number">2.</span> <span class="nav-text">关键词提取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#词性标注"><span class="nav-number">3.</span> <span class="nav-text">词性标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并行分词"><span class="nav-number">4.</span> <span class="nav-text">并行分词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行分词"><span class="nav-number">5.</span> <span class="nav-text">命令行分词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟加载机制"><span class="nav-number">6.</span> <span class="nav-text">延迟加载机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法解析"><span class="nav-number">7.</span> <span class="nav-text">算法解析</span></a></li></ol></div>
             
 
           </div>

@@ -516,8 +516,7 @@
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><h3 id="带概率性质的反证法原理"><a href="#带概率性质的反证法原理" class="headerlink" title="带概率性质的反证法原理"></a>带概率性质的反证法原理</h3><p>  反证法证明命题的一般步骤如下：<br>  1.假设结论的反面成立，即反设；<br>  2.由这个假设出发，经过正确的推理导出矛盾，即归谬；<br>  3.由矛盾判定假设不正确，从而肯定命题结论正确，即结论。</p>
 <h3 id="小概率事件原理"><a href="#小概率事件原理" class="headerlink" title="小概率事件原理"></a>小概率事件原理</h3><p>  费歇尔老先生提出了p值这个概念，用来表示在原假设成立的条件下，抽样结果的不合理和更不合理的概率。他还给出了一个判决点，即0.05，费歇尔p值小于1/20就足以拒绝原假设了。</p>
 <p>  0.05是足够小的概率，一般认为，在一次抽样(试验)中，小概率事件几乎不可能发生，如果出现发生了，则说明事先的假设是错误的。但小概率事件并不是一定不会发生，当抽样次数足够多时，小概率事件是一定会发生的。这说明即使是一次抽样，小概率事件仍有可能发生，也就是说存在判断错误的可能性。在标准的假设检验中，对判错的概率进行了定义，这就是α和β风险.</p>
-<p>##步骤</p>
-<ol>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
 <li><p>将实际问题提炼为统计问题<br>加入：模型上线后效果是否好于上线前</p>
 </li>
 <li><p>建立对立假设<br>原假设H_0 和备择假设H_a,通常我们将无区别的、不需证明的放在原假设，将有差别的、需要证明的放在备择假设.</p>
@@ -540,12 +539,12 @@
 <h2 id="T-检验"><a href="#T-检验" class="headerlink" title="T 检验"></a>T 检验</h2><p> T 检验是针对分布期望 u 的检验。<br> <img src="http://www.algorithmdog.com/%E7%BB%9F%E8%AE%A1%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E4%B8%80t%E6%A3%80%E9%AA%8C" alt="统计假设检验一t检验"><br>t检验不需要知道总体方差，它用样本方差替代总体方差，得到的统计量服从t分布。</p>
 <h2 id="卡方检验"><a href="#卡方检验" class="headerlink" title="卡方检验"></a>卡方检验</h2><p>卡方检验用于检验观测到的数据是否服从特定多项分布。<br><img src="http://www.algorithmdog.com/%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E5%8E%9F%E7%90%86%E4%BA%8C%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C" alt="假设检验原理二卡方检验"></p>
 <h2 id="F-检验"><a href="#F-检验" class="headerlink" title="F 检验"></a>F 检验</h2><p>F检验又叫方差齐性检验，用于检验两组服从正态分布的样本是否具有相同的总体方差，即方差齐性。<br><img src="http://www.algorithmdog.com/%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E5%8E%9F%E7%90%86%E4%B8%89f%E6%A3%80%E9%AA%8C" alt="假设检验原理三: F 检验"></p>
-<h2 id="Z检验与T检验的区别"><a href="#Z检验与T检验的区别" class="headerlink" title="Z检验与T检验的区别"></a>Z检验与T检验的区别</h2><p>【z检验】—适用的data types：<br>1.随机，独立<br>2.n&gt;30,preferable<br>3.n&lt;=30,正态分布。n&gt;30, not necessary.<br>4.样本方差应该相同<br>5.sample size尽可能相等，但一些不同也允许</p>
-<ol start="6">
+<h2 id="Z检验与T检验的区别"><a href="#Z检验与T检验的区别" class="headerlink" title="Z检验与T检验的区别"></a>Z检验与T检验的区别</h2><p>【z检验】—-适用的data types：<br>1.随机，独立<br>2.n&gt;30,preferable<br>3.n&lt;=30,正态分布。n&gt;30, not necessary.<br>4.样本方差应该相同<br>5.sample size尽可能相等，但一些不同也允许</p>
+<ol>
 <li>标准差已知，则z检验preferable</li>
 </ol>
-<p>【t检验】—适用的data types：<br>1.随机，独立(除了paired-sample t test)<br>2.n&lt;30<br>3.正态分布for the equal and unequal variance t-test<br>4.样本方差应该相同for the equal variance t-test<br>5.sample size尽可能相等，但一些不同也允许</p>
-<p>用n&lt;30(或其他标准60等）的小样本去估计总体的未知均值和未知方差，前提要求总体样本rough normal就是似正态分布，样本均值服从自由度为n-1的t分布，总体的方差为样本方差*root（n/n-1)，此时是t检验，同样的条件，n&lt;30的小样本，总体均值未知，但总体方差已知，总体样本是似正态分布，样本均值服从正态分布，使用z检验；而n&gt;30（或其他标准60等）的小样本去估计总体的未知均值和未知方差，不要求总体分布是否是似正态分布，因为中心极限定理，样本均值服从正态分布，总体方差可以用样本方差来估计，用z检验</p>
+<p>【t检验】—-适用的data types：<br>1.随机，独立(除了paired-sample t test)<br>2.n&lt;30<br>3.正态分布for the equal and unequal variance t-test<br>4.样本方差应该相同for the equal variance t-test<br>5.sample size尽可能相等，但一些不同也允许</p>
+<p>用n<30(或其他标准60等）的小样本去估计总体的未知均值和未知方差，前提要求总体样本rough normal就是似正态分布，样本均值服从自由度为n-1的t分布，总体的方差为样本方差*root（n n-1)，此时是t检验，同样的条件，n<30的小样本，总体均值未知，但总体方差已知，总体样本是似正态分布，样本均值服从正态分布，使用z检验；而n>30（或其他标准60等）的小样本去估计总体的未知均值和未知方差，不要求总体分布是否是似正态分布，因为中心极限定理，样本均值服从正态分布，总体方差可以用样本方差来估计，用z检验</30(或其他标准60等）的小样本去估计总体的未知均值和未知方差，前提要求总体样本rough></p>
 
       
     </div>
@@ -870,7 +869,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#带概率性质的反证法原理"><span class="nav-number">2.1.</span> <span class="nav-text">带概率性质的反证法原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小概率事件原理"><span class="nav-number">2.2.</span> <span class="nav-text">小概率事件原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Z检验"><span class="nav-number">3.</span> <span class="nav-text">Z检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T-检验"><span class="nav-number">4.</span> <span class="nav-text">T 检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卡方检验"><span class="nav-number">5.</span> <span class="nav-text">卡方检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F-检验"><span class="nav-number">6.</span> <span class="nav-text">F 检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Z检验与T检验的区别"><span class="nav-number">7.</span> <span class="nav-text">Z检验与T检验的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#带概率性质的反证法原理"><span class="nav-number">2.1.</span> <span class="nav-text">带概率性质的反证法原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小概率事件原理"><span class="nav-number">2.2.</span> <span class="nav-text">小概率事件原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Z检验"><span class="nav-number">4.</span> <span class="nav-text">Z检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T-检验"><span class="nav-number">5.</span> <span class="nav-text">T 检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卡方检验"><span class="nav-number">6.</span> <span class="nav-text">卡方检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F-检验"><span class="nav-number">7.</span> <span class="nav-text">F 检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Z检验与T检验的区别"><span class="nav-number">8.</span> <span class="nav-text">Z检验与T检验的区别</span></a></li></ol></div>
             
 
           </div>
